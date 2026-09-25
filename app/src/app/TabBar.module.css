@@ -1,0 +1,58 @@
+.tabbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  padding: 12px 20px 26px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  /* 顶部化开的一条渐隐，用的是屏幕底色而不是新颜色 */
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--screen-bg) 96%, transparent) 45%,
+    color-mix(in srgb, var(--screen-bg) 60%, transparent) 75%,
+    transparent
+  );
+}
+
+.tab {
+  flex: 1;
+  max-width: 104px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 9px 6px 7px;
+  border-radius: 16px;
+  color: var(--ink-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  transition:
+    color 0.35s var(--ease),
+    background 0.35s var(--ease);
+}
+
+.tab svg {
+  width: 21px;
+  height: 21px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.on {
+  color: #f0dcbb;
+  background: rgba(232, 176, 106, 0.08);
+}
+
+.tab:active {
+  transform: scale(0.94);
+}

@@ -1,0 +1,129 @@
+.eyebrowTop {
+  margin-top: 10px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.tl {
+  margin-top: 26px;
+}
+
+.tlDay {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 26px 0 14px;
+}
+
+.d {
+  font-size: 12.5px;
+  color: var(--ink-2);
+  letter-spacing: 0.1em;
+}
+
+.n {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.entry {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    background 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    transform 0.35s var(--ease);
+}
+
+.entry:hover {
+  background: var(--glass);
+  border-color: var(--line);
+}
+
+.entry:active {
+  transform: scale(0.985);
+}
+
+.t {
+  font-size: 12px;
+  color: var(--ink-3);
+  padding-top: 3px;
+  width: 44px;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.media {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--warm);
+  letter-spacing: 0.06em;
+}
+
+.cap {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-top: 6px;
+  word-break: break-word;
+}
+
+.sub {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 7px;
+}
+
+.thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background-size: cover;
+  background-position: center;
+}
+
+.miniDots {
+  display: flex;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.miniDots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-4);
+}
+
+.hit {
+  background: rgba(232, 176, 106, 0.75);
+}
+
+.tail {
+  padding: 34px 16px 10px;
+}

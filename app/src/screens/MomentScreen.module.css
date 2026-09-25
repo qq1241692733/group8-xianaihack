@@ -1,0 +1,307 @@
+.momentPane {
+  display: flex;
+  flex-direction: column;
+}
+
+.clockWrap {
+  margin-top: 16px;
+}
+
+.clock {
+  font-family: var(--serif);
+  font-size: 66px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.sec {
+  font-size: 24px;
+  color: var(--ink-3);
+  margin-left: 6px;
+  vertical-align: top;
+  letter-spacing: 0.06em;
+}
+
+.dayline {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.eyebrowFlat {
+  margin: 0;
+}
+
+/* ---------- 看起来是效率仪表盘 ---------- */
+.dash {
+  margin-top: 20px;
+}
+
+.dashHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.dashNote {
+  font-size: 10.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.14em;
+}
+
+.dashGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.stat {
+  padding: 14px 15px;
+  border-radius: 16px;
+  background: var(--glass);
+  border: 1px solid var(--line);
+}
+
+.k {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.16em;
+}
+
+.v {
+  font-family: var(--serif);
+  font-size: 27px;
+  line-height: 1.2;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.u {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-left: 3px;
+  font-family: var(--sans);
+}
+
+.statDim .v {
+  color: var(--ink-4);
+}
+
+.statNote {
+  margin-top: 6px;
+  font-size: 13.5px;
+  font-family: var(--sans);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.panel {
+  margin-top: 9px;
+  padding: 15px;
+  border-radius: 16px;
+  background: var(--glass);
+  border: 1px solid var(--line);
+}
+
+.panelT {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0.16em;
+}
+
+.panelEmpty {
+  margin-top: 9px;
+  font-size: 13px;
+  color: var(--ink-3);
+  font-family: var(--serif);
+  line-height: 1.7;
+}
+
+/* ---------- 按不动的主按钮 ---------- */
+.hero {
+  margin-top: 26px;
+}
+
+.focusBtn {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid var(--warm-line-strong);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(140deg, var(--warm-soft), rgba(232, 176, 106, 0.05));
+  color: var(--warm-bright);
+  font-family: var(--sans);
+  padding: 26px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  align-items: center;
+  transition:
+    transform 0.5s var(--ease),
+    background 0.4s var(--ease),
+    border-color 0.4s var(--ease),
+    color 0.4s var(--ease);
+  box-shadow: 0 18px 40px -22px rgba(232, 176, 106, 0.5);
+}
+
+.zh {
+  font-family: var(--serif);
+  font-size: 23px;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  transition: font-size 0.4s var(--ease);
+}
+
+.en {
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  color: rgba(246, 215, 168, 0.5);
+  text-transform: uppercase;
+}
+
+.focusBtn:hover {
+  background: linear-gradient(140deg, rgba(232, 176, 106, 0.2), rgba(232, 176, 106, 0.07));
+}
+
+.refusing {
+  border-color: var(--line);
+  background: var(--glass);
+  color: var(--ink-3);
+  box-shadow: none;
+}
+
+.refusing .zh {
+  font-size: 20px;
+}
+
+.refuseMsg {
+  min-height: 22px;
+  margin-top: 14px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+
+.refuseMsgOn {
+  opacity: 1;
+}
+
+/* ---------- 痕迹：不加数字，只加一条虚线 ---------- */
+.trace {
+  margin-top: 20px;
+}
+
+.traceLine {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 15px;
+  border-radius: 16px;
+  background: var(--glass);
+  border: 1px dashed var(--line-dashed);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.traceNote {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+/* ---------- 唯一真正管用的入口，故意做得最小 ---------- */
+.altRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 26px 0 6px;
+}
+
+.altRecord {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-family: var(--serif);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--warm-line);
+}
+
+.altRecord:hover {
+  color: var(--warm-bright);
+  border-bottom-color: var(--warm-line-strong);
+}
+
+.altSep {
+  color: var(--ink-4);
+  font-size: 12px;
+}
+
+.altWant {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-3);
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  padding: 8px 4px;
+}
+
+.altWant:hover {
+  color: var(--ink-2);
+}
+
+/* ---------- 「想做」：不追问、不记录 ---------- */
+.afterWant {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+  text-align: center;
+  gap: 16px;
+  background: color-mix(in srgb, var(--screen-bg) 93%, transparent);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s var(--ease);
+}
+
+.afterWantOn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.afterWantTitle {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.afterWantText {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+
+.wantBack {
+  margin-top: 14px;
+  width: auto;
+  padding: 13px 24px;
+}

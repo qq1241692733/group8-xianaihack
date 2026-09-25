@@ -1,0 +1,22 @@
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 112px;
+  transform: translate(-50%, 14px);
+  background: rgba(24, 24, 27, 0.94);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  padding: 11px 18px;
+  border-radius: var(--radius-pill);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.45s var(--ease);
+  z-index: 60;
+  white-space: nowrap;
+}
+
+.on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

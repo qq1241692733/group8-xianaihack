@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"localhost:5173 → %{http_code}\\\\n\" --max-time 3 http://localhost:5173/)",
+      "Bash(tasklist)",
+      "Bash(cmd.exe /c \"where node\")",
+      "Bash(cmd.exe /c \"where npm\")",
+      "Read(//c/Users/guope/.local/bin/**)",
+      "Read(//c/Users/guope/.local/bin/node_modules/npm/bin//**)",
+      "Bash(cmd.exe /c \"echo %PATH%\")",
+      "Bash(grep -viE \"^$\")",
+      "Bash(powershell.exe -NoProfile -Command 'Write-Output '\\\\''--- where node ---'\\\\''; \\(Get-Command node -ErrorAction SilentlyContinue\\).Source; Write-Output '\\\\''--- where npm ---'\\\\''; \\(Get-Command npm -ErrorAction SilentlyContinue\\).Source; Write-Output '\\\\''--- PATH 里含 node/\\\\.local 的项 ---'\\\\''; $env:PATH -split '\\\\'';'\\\\'' | Where-Object { $_ -match '\\\\''node|\\\\.local|npm'\\\\'' }')",
+      "Bash(echo \"=== A\\) C:\\\\Users\\\\guope\\\\.local\\\\bin ===\" && ls -la \"/c/Users/guope/.local/bin/\" | grep -iE \"npm|node|npx\" *)",
+      "Read(//c/Users/guope/.local/bin//**)",
+      "Read(//c/Users/guope/.workbuddy/binaries/node/versions/**)",
+      "Read(//c/Users/guope/.local/bin/node_modules//**)",
+      "Bash(powershell.exe -NoProfile -Command '$env:PATH += '\\\\'';C:\\\\Users\\\\guope\\\\.local\\\\bin\\\\node_modules\\\\npm\\\\bin'\\\\''; Write-Output '\\\\''--- npm 现在能找到吗 ---'\\\\''; \\(Get-Command npm -ErrorAction SilentlyContinue\\).Source; Write-Output '\\\\''--- 版本 ---'\\\\''; npm -v')",
+      "Read(//c/Users/guope/.local/bin/node_modules/npm/bin/**)",
+      "Read(//c/Users/guope/.local/bin/node_modules/npm/**)",
+      "Bash(powershell.exe -NoProfile -Command \"& 'C:\\\\Users\\\\guope\\\\.local\\\\bin\\\\node_modules\\\\npm\\\\bin\\\\npm.cmd' -v\")",
+      "Bash(powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\guope\\\\AppData\\\\Local\\\\Temp\\\\npm_shim_test.ps1\")",
+      "Bash(rm -v \"/c/Users/guope/AppData/Local/Temp/npm_shim_test.ps1\" 2>&1; echo \"\\(临时验证脚本已删\\)\")",
+      "Bash(powershell.exe -NoProfile -Command 'Get-CimInstance Win32_Process -Filter \"name='\\\\''node.exe'\\\\''\" | Select-Object ProcessId, @{n='\\\\''CmdLine'\\\\'';e={$_.CommandLine}} | Format-List')",
+      "Bash(powershell.exe -NoProfile -Command \"Stop-Process -Id 13812,36704 -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; 'done'\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 3 http://localhost:5173/)",
+      "Bash(rm -rf node_modules)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\guope\\AppData\\Local\\Temp"
+    ]
+  }
+}

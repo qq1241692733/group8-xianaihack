@@ -1,0 +1,60 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(90% 55% at 50% 32%, rgba(232, 176, 106, 0.07), transparent 62%),
+    var(--overlay-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s var(--ease);
+}
+
+.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ovIn {
+  padding: 64px 32px 44px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ovIn::-webkit-scrollbar {
+  display: none;
+}
+
+.ovClose {
+  position: absolute;
+  top: 44px;
+  right: 26px;
+  z-index: 5;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  font-family: var(--sans);
+  padding: 8px;
+}
+
+.ovClose:hover {
+  color: var(--ink-2);
+}
+
+@media (max-width: 430px) {
+  .ovIn {
+    padding-top: 56px;
+  }
+  .ovClose {
+    top: 22px;
+  }
+}

@@ -1,0 +1,166 @@
+/*
+ * 设计令牌 —— 全部抽取自原单文件版 index.html 的 :root，逐值对齐，没有重新调色。
+ * 这里是颜色的唯一来源；组件里不允许出现字面色值。
+ */
+:root {
+  --bg: #08080a;
+  --ink: #f2efe9;
+  --ink-2: rgba(242, 239, 233, 0.66);
+  --ink-3: rgba(242, 239, 233, 0.38);
+  --ink-4: rgba(242, 239, 233, 0.18);
+  --line: rgba(242, 239, 233, 0.09);
+  --line-dashed: rgba(242, 239, 233, 0.14);
+  --screen-bg: #0b0b0d;
+  --overlay-bg: #07070a;
+  --warm: #e8b06a;
+  --warm-bright: #f6d7a8;
+  --warm-soft: rgba(232, 176, 106, 0.16);
+  --warm-line: rgba(232, 176, 106, 0.28);
+  --warm-line-strong: rgba(232, 176, 106, 0.34);
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-hover: rgba(255, 255, 255, 0.075);
+  --glass-active: rgba(255, 255, 255, 0.08);
+  --cool: rgba(143, 168, 200, 0.08);
+
+  --serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', Georgia, serif;
+  --sans:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    Inter, system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.24, 1);
+
+  --radius-pill: 999px;
+  --radius-sm: 14px;
+  --radius-md: 18px;
+  --radius-lg: 22px;
+  --radius-xl: 24px;
+}
+
+/* ---------- 全局动画 ---------- */
+@keyframes grainShift {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-3%, 2%);
+  }
+  40% {
+    transform: translate(2%, -3%);
+  }
+  60% {
+    transform: translate(-2%, -2%);
+  }
+  80% {
+    transform: translate(3%, 1%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes traceIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pulseBar {
+  from {
+    transform: scaleY(0.45);
+  }
+  to {
+    transform: scaleY(1.15);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.09);
+    opacity: 1;
+  }
+}
+
+@keyframes softBreathe {
+  0%,
+  100% {
+    transform: scale(0.86);
+    opacity: 0.62;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes amb {
+  from {
+    transform: scaleY(0.3);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes bloom {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.03) translate(0, 0);
+  }
+  to {
+    transform: scale(1.1) translate(-2%, -2%);
+  }
+}
+
+/* 尊重系统的减少动效设置：动画全部退化为静态。产品不给奖励，也不该给人添麻烦。 */
+@media (prefers-reduced-motion: reduce) {
+  :root * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

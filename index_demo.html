@@ -108,6 +108,59 @@ body::before{
 .foot-note b{font-weight:500;color:var(--ink)}
 .foot-sep{height:1px;background:var(--line);margin:18px 0}
 .tiny{font-size:11.5px;color:var(--ink-3);letter-spacing:.04em;line-height:1.9}
+/* ---------- 首页：看起来是效率工具 ---------- */
+.dash{margin-top:20px}
+.dash-head{display:flex;align-items:baseline;justify-content:space-between}
+.dash-note{font-size:10.5px;color:var(--ink-4);letter-spacing:.14em}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.stat{padding:14px 15px;border-radius:16px;background:var(--glass);border:1px solid var(--line)}
+.stat .k{font-size:10.5px;color:var(--ink-3);letter-spacing:.16em}
+.stat .v{font-family:var(--serif);font-size:27px;line-height:1.2;margin-top:6px;font-variant-numeric:tabular-nums}
+.stat .v .u{font-size:12px;color:var(--ink-3);margin-left:3px;font-family:var(--sans)}
+.stat.dim .v{color:var(--ink-4)}
+.panel{margin-top:9px;padding:15px;border-radius:16px;background:var(--glass);border:1px solid var(--line)}
+.panel-t{font-size:10.5px;color:var(--ink-3);letter-spacing:.16em}
+.panel-empty{margin-top:9px;font-size:13px;color:var(--ink-3);font-family:var(--serif);line-height:1.7}
+.hero{margin-top:26px}
+.focus-btn{
+  position:relative;width:100%;cursor:pointer;border:1px solid rgba(232,176,106,.34);border-radius:24px;
+  background:linear-gradient(140deg,rgba(232,176,106,.16),rgba(232,176,106,.05));
+  color:#f6d7a8;font-family:var(--sans);padding:26px 20px;text-align:center;
+  display:flex;flex-direction:column;gap:9px;align-items:center;
+  transition:transform .5s var(--ease),background .4s var(--ease),border-color .4s var(--ease),color .4s var(--ease);
+  box-shadow:0 18px 40px -22px rgba(232,176,106,.5);
+}
+.focus-btn .zh{font-family:var(--serif);font-size:23px;letter-spacing:.16em;text-indent:.16em;transition:font-size .4s var(--ease)}
+.focus-btn .en{font-size:9.5px;letter-spacing:.3em;color:rgba(246,215,168,.5);text-transform:uppercase}
+.focus-btn:hover{background:linear-gradient(140deg,rgba(232,176,106,.2),rgba(232,176,106,.07))}
+.focus-btn.refusing{border-color:var(--line);background:var(--glass);color:var(--ink-3);box-shadow:none}
+.focus-btn.refusing .zh{font-size:20px}
+.refuse-msg{
+  min-height:22px;margin-top:14px;text-align:center;font-family:var(--serif);font-size:14.5px;
+  color:var(--ink-2);letter-spacing:.04em;opacity:0;transition:opacity .5s var(--ease);
+}
+.refuse-msg.on{opacity:1}
+.trace{margin-top:20px}
+.trace-line{
+  display:flex;align-items:center;gap:9px;padding:13px 15px;border-radius:16px;
+  background:var(--glass);border:1px dashed rgba(242,239,233,.14);font-size:13px;
+  color:var(--ink-2);animation:traceIn .7s var(--ease);
+}
+.trace-note{margin-top:10px;font-size:11.5px;color:var(--ink-4);letter-spacing:.06em;text-align:center}
+@keyframes traceIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.alt-row{display:flex;align-items:center;justify-content:center;gap:10px;padding:26px 0 6px}
+.alt-record{
+  border:0;background:transparent;cursor:pointer;color:var(--ink-2);font-family:var(--serif);
+  font-size:14px;letter-spacing:.1em;padding:8px 4px;border-bottom:1px solid rgba(232,176,106,.3);
+}
+.alt-record:hover{color:#f6d7a8;border-bottom-color:rgba(232,176,106,.6)}
+.alt-sep{color:var(--ink-4);font-size:12px}
+.alt-want{
+  border:0;background:transparent;cursor:pointer;color:var(--ink-3);font-family:var(--serif);
+  font-size:13px;letter-spacing:.1em;padding:8px 4px;
+}
+.alt-want:hover{color:var(--ink-2)}
+.amb-lines{margin-top:20px;display:flex;flex-direction:column;gap:9px;align-items:center;min-height:70px}
 .afterWant{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:0 40px;text-align:center;gap:16px;background:rgba(11,11,13,.93);backdrop-filter:blur(14px);
@@ -371,26 +424,53 @@ textarea.write::placeholder{color:var(--ink-4)}
             <div class="dayline" id="dayline">2026 年 9 月 24 日 · 星期四</div>
           </div>
 
-          <div class="ask">
-            <div class="eyebrow">此刻</div>
-            <h1>现在，<br/>你想做什么？</h1>
-            <div class="choices">
-              <button class="choice" id="btn-want">
-                <span class="zh">想做</span>
-                <span class="en">Let&#39;s go</span>
-              </button>
-              <button class="choice primary" id="btn-notwant">
-                <span class="zh">不想做</span>
-                <span class="en">That&#39;s fine too</span>
-              </button>
+          <div class="dash">
+            <div class="dash-head">
+              <span class="eyebrow" style="margin:0">今日概览</span>
+              <span class="dash-note" id="dash-note">更新于 19:42</span>
             </div>
-            <p class="tiny" style="margin-top:18px">两个都可以。这里没有正确答案。</p>
+            <div class="dash-grid">
+              <div class="stat">
+                <div class="k">专 注</div>
+                <div class="v" id="stat-focus">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">完 成 率</div>
+                <div class="v" id="stat-rate">—</div>
+              </div>
+              <div class="stat dim">
+                <div class="k">连 续 天 数</div>
+                <div class="v" style="font-size:13.5px;font-family:var(--sans);letter-spacing:.02em">你没有在坚持什么</div>
+              </div>
+              <div class="stat">
+                <div class="k">你 拥 有 的</div>
+                <div class="v">2<span class="u">小时</span>47<span class="u">分</span></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-t">今 日 任 务</div>
+              <div class="panel-empty">你还没有给自己安排任何事。<br/>这里也不会替你安排。</div>
+            </div>
           </div>
 
-          <div class="foot-sep"></div>
-          <div class="foot-note">今天，你拥有 <b>2 小时 47 分钟</b>。</div>
-          <p class="tiny" style="margin-top:10px">没有浪费。没有有用。没有评价。</p>
-          <div style="height:20px"></div>
+          <div class="hero">
+            <button class="focus-btn" id="btn-focus">
+              <span class="zh">开始专注</span>
+              <span class="en">Start Focus</span>
+            </button>
+            <div class="refuse-msg" id="refuse-msg"></div>
+          </div>
+
+          <div class="trace" id="trace" style="display:none"></div>
+
+          <div class="alt-row">
+            <button class="alt-record" id="btn-alt-record">留下一刻</button>
+            <span class="alt-sep">·</span>
+            <button class="alt-want" id="btn-alt-want">想做</button>
+            <span class="alt-sep">·</span>
+            <button class="alt-want" id="btn-alt-notwant">不想做</button>
+          </div>
+          <div style="height:14px"></div>
 
           <div class="afterWant" id="after-want">
             <h2>好。</h2>
@@ -442,8 +522,9 @@ textarea.write::placeholder{color:var(--ink-4)}
                 <div class="now" id="breath-now">现 在</div>
               </div>
               <div class="ambient" id="ambient"></div>
-              <div class="amb-label" id="amb-label">正在听 —— 环境声音</div>
-              <button class="keep-btn" id="btn-to-capture" style="margin-top:30px;width:auto;padding:15px 26px;display:none">留下这一刻</button>
+              <div class="amb-label" id="amb-label">没有倒计时。没有进度。想走随时可以走。</div>
+              <div class="amb-lines" id="amb-lines"></div>
+              <button class="keep-btn" id="btn-to-capture" style="margin-top:26px;width:auto;padding:15px 26px;background:transparent;border-color:transparent;color:var(--ink-3);font-size:12.5px">留下这一刻 →</button>
             </div>
           </div>
         </div>
@@ -472,7 +553,8 @@ textarea.write::placeholder{color:var(--ink-4)}
                   <span class="arw">›</span>
                 </button>
               </div>
-              <button class="keep-btn" id="btn-nothing-keep" style="margin-top:22px;background:transparent;border-color:transparent;color:var(--ink-3);font-size:12.5px">什么都不留下，也结束这一刻</button>
+              <button class="keep-btn" id="btn-nothing-keep" style="margin-top:14px">什么都不留下</button>
+              <p class="tiny" style="text-align:center;margin-top:12px">不留下，也是完整的。</p>
             </div>
 
             <div id="cap-sound" class="rec">
@@ -508,10 +590,10 @@ textarea.write::placeholder{color:var(--ink-4)}
             </div>
 
             <div id="cap-saved" class="saved">
-              <div class="mark">✦</div>
-              <h2>这一刻已经留下来了。</h2>
+              <h2>留下来了。</h2>
               <p id="saved-detail"></p>
-              <button class="keep-btn warm" id="btn-go-time" style="margin-top:26px">去「时间」看看</button>
+              <p class="tiny" style="margin-top:14px">它不构成任何统计。<br/>只是在时间里多了一条。</p>
+              <button class="keep-btn" id="btn-go-time" style="margin-top:26px">去「时间」看看</button>
               <button class="keep-btn" id="btn-back-moment" style="background:transparent;border-color:transparent;color:var(--ink-3);font-size:12.5px">回到此刻</button>
             </div>
           </div>
@@ -553,8 +635,8 @@ textarea.write::placeholder{color:var(--ink-4)}
     </div>
   </div>
   <div class="hint-bar">
-    <span>建议路径：<b>不想做</b> → 什么都不做 30 秒 → <b>留下这一刻</b></span>
-    <span>然后去 <b>理解</b> 看它怎么回应你</span>
+    <span>建议路径：先按几次 <b>开始专注</b>，它不会启动</span>
+    <span>然后点最小的那行 <b>留下一刻</b> → 再去 <b>理解</b></span>
   </div>
 </div>
 
@@ -610,32 +692,55 @@ textarea.write::placeholder{color:var(--ink-4)}
   $$("[data-close]").forEach(function(btn){
     btn.addEventListener("click", function(){
       closeOverlay(btn.dataset.close);
-      if(btn.dataset.close === "ov-capture"){ stopHintTimers(); }
+      if(btn.dataset.close === "ov-capture"){ capHome(); }
     });
   });
 
-  /* ---------- 此刻：想做 / 不想做 ---------- */
-  $("#btn-want").addEventListener("click", function(){
+  /* ---------- 首页：一个不肯工作的效率工具 ---------- */
+  var refuseCount = 0;
+  var refuseLines = [
+    "为什么这么着急？",
+    "它不会启动。今天不会。",
+    "好。那就先不做。"
+  ];
+
+  $("#btn-focus").addEventListener("click", function(){
+    var btn = this;
+    var msg = $("#refuse-msg");
+    btn.style.transform = "translate(" + (Math.random()*7-3.5).toFixed(1) + "px," + (Math.random()*7-3.5).toFixed(1) + "px)";
+    setTimeout(function(){ btn.style.transform = ""; }, 480);
+    msg.textContent = refuseLines[Math.min(refuseCount, refuseLines.length-1)];
+    msg.classList.add("on");
+    refuseCount++;
+    if(refuseCount >= 3){
+      btn.classList.add("refusing");
+      btn.querySelector(".zh").textContent = "那就先不做";
+      btn.querySelector(".en").textContent = "Not now";
+      $("#dash-note").textContent = "这个工具今天不工作";
+    }
+  });
+
+  $("#btn-alt-want").addEventListener("click", function(){
     $("#after-want").classList.add("on");
   });
   $("#want-back").addEventListener("click", function(){
     $("#after-want").classList.remove("on");
   });
+  $("#btn-alt-record").addEventListener("click", function(){
+    capHome();
+    openOverlay("ov-capture");
+  });
 
   /* ---------- 不想做 → 什么都不做 ---------- */
-  var NOTHING_SECONDS = 30;
-  var ambTimer = null, nothingLeft = 0, breathTimer = null;
+  var ambTimer = null;
 
   function startNothing(){
     $("#nothing-lead").textContent = "好。";
     $("#nothing-sub").textContent = "那就什么都不做。";
     $("#breath-now").textContent = "现 在";
-    $("#btn-to-capture").style.display = "none";
-    $("#amb-label").textContent = "正在听 —— 环境声音";
+    $("#amb-label").textContent = "没有倒计时。没有进度。想走随时可以走。";
     buildAmbient();
     openOverlay("ov-nothing");
-    nothingLeft = NOTHING_SECONDS;
-    runBreath();
     scheduleAmbient();
   }
 
@@ -651,30 +756,10 @@ textarea.write::placeholder{color:var(--ink-4)}
     }
   }
 
-  function runBreath(){
-    var circle = $("#breath-prog");
-    var LEN = 722;
-    var t0 = Date.now();
-    clearInterval(breathTimer);
-    circle.style.strokeDashoffset = LEN;
-    breathTimer = setInterval(function(){
-      var p = Math.min(1, (Date.now()-t0) / (NOTHING_SECONDS*1000));
-      circle.style.strokeDashoffset = (LEN * (1-p)).toFixed(1);
-      if(p >= 1){
-        clearInterval(breathTimer);
-        $("#nothing-lead").textContent = "刚才发生了什么？";
-        $("#nothing-sub").textContent = "什么都没有发生。这也可以。";
-        $("#breath-now").textContent = "无 用";
-        $("#amb-label").textContent = "已留下 —— 30 秒的环境声音";
-        $("#btn-to-capture").style.display = "block";
-      }
-    }, 120);
-  }
-
   var ambientLines = ["远处有车经过","空调的声音","有人在说话","杯子放下的声音","有人笑了一下"];
   function scheduleAmbient(){
     clearTimeout(ambTimer);
-    var host = $("#detected");
+    var host = $("#amb-lines");
     host.innerHTML = "";
     ambientLines = ambientLines.slice().sort(function(){ return Math.random() - 0.5; });
     var i = 0;
@@ -686,14 +771,13 @@ textarea.write::placeholder{color:var(--ink-4)}
       d.textContent = line;
       host.appendChild(d);
       i++;
-      ambTimer = setTimeout(step, 8000 + Math.random()*4000);
+      ambTimer = setTimeout(step, 7000 + Math.random()*4000);
     })();
   }
 
-  $("#btn-notwant").addEventListener("click", startNothing);
+  $("#btn-alt-notwant").addEventListener("click", startNothing);
   $("#btn-to-capture").addEventListener("click", function(){
     closeOverlay("ov-nothing");
-    clearInterval(breathTimer);
     clearTimeout(ambTimer);
     capHome();
     openOverlay("ov-capture");
@@ -850,6 +934,24 @@ textarea.write::placeholder{color:var(--ink-4)}
     showSaved(e);
   }
 
+  /* 无用是默认，有用是例外：留下的东西不产生统计，只留一条痕 */
+  function addTrace(e){
+    var host = $("#trace");
+    var mark = e.kind === "sound" ? "🎧" : (e.kind === "photo" ? "📷" : "✍️");
+    var line = document.createElement("div");
+    line.className = "trace-line";
+    line.innerHTML = "<span>" + mark + "</span><span>" + e.time + " · " + e.cap + "</span>";
+    host.appendChild(line);
+    host.style.display = "block";
+    var note = host.querySelector(".trace-note");
+    if(!note){
+      note = document.createElement("div");
+      note.className = "trace-note";
+      note.textContent = "它不计入任何数字。也没有可以完成的事。";
+      host.appendChild(note);
+    }
+  }
+
   function showSaved(e){
     var detail = "";
     if(e.kind === "sound") detail = "🎧 " + e.time + " · " + e.seconds + " 秒<br/>" + e.cap;
@@ -857,7 +959,7 @@ textarea.write::placeholder{color:var(--ink-4)}
     if(e.kind === "word")  detail = "✍️ " + e.time + "<br/>" + e.cap;
     $("#saved-detail").innerHTML = detail;
     capView("cap-saved");
-    if(e.kind === "word") $("#saved-detail").innerHTML = detail;
+    addTrace(e);
   }
 
   $("#btn-go-time").addEventListener("click", function(){

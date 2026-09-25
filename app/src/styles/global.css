@@ -1,0 +1,295 @@
+@import './tokens.css';
+@import './atoms.css';
+
+/*
+ * 全局壳层样式。
+ * 只有两类东西允许写在这里：① 全局重置与 body 氛围 ② 「手机模型」这层物理外壳。
+ * 组件内部一律用 CSS Modules，避免类名互相污染。
+ */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(232, 176, 106, 0.1), transparent 60%),
+    radial-gradient(90% 60% at 80% 110%, var(--cool), transparent 60%),
+    radial-gradient(70% 50% at 10% 90%, rgba(232, 176, 106, 0.05), transparent 60%);
+}
+
+/* ---------- 颗粒噪点，给暗色屏幕一点材质 ---------- */
+.grain {
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  opacity: 0.05;
+  z-index: 99;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grainShift 6s steps(6) infinite;
+}
+
+.studio {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.device {
+  position: relative;
+  width: 392px;
+  height: 846px;
+  border-radius: 56px;
+  background: linear-gradient(160deg, #2a2a2e, #111114 40%, #242428);
+  padding: 11px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 40px 90px -20px rgba(0, 0, 0, 0.9),
+    0 0 120px -30px rgba(232, 176, 106, 0.18);
+}
+
+.device::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 210px;
+  width: 3px;
+  height: 96px;
+  border-radius: 3px;
+  background: linear-gradient(#3a3a40, #1c1c20);
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 46px;
+  overflow: hidden;
+  background:
+    radial-gradient(110% 60% at 50% 0%, rgba(232, 176, 106, 0.09), transparent 55%),
+    radial-gradient(80% 50% at 100% 100%, var(--cool), transparent 60%),
+    var(--screen-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112px;
+  height: 31px;
+  border-radius: 20px;
+  background: #000;
+  z-index: 40;
+}
+
+.statusbar {
+  position: relative;
+  z-index: 30;
+  flex: 0 0 auto;
+  height: 56px;
+  padding: 0 30px 4px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  opacity: 0.92;
+}
+
+.statusbarRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 11px;
+}
+
+.bars i {
+  width: 3px;
+  border-radius: 1px;
+  background: currentColor;
+  display: block;
+}
+
+.bars i:nth-child(1) {
+  height: 4px;
+}
+.bars i:nth-child(2) {
+  height: 6px;
+}
+.bars i:nth-child(3) {
+  height: 8.5px;
+}
+.bars i:nth-child(4) {
+  height: 11px;
+}
+
+.batt {
+  width: 25px;
+  height: 12.5px;
+  border: 1.4px solid currentColor;
+  border-radius: 3.5px;
+  position: relative;
+}
+
+.batt::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 3.5px;
+  width: 2px;
+  height: 5px;
+  border-radius: 0 2px 2px 0;
+  background: currentColor;
+}
+
+.batt i {
+  position: absolute;
+  inset: 1.6px;
+  width: 72%;
+  border-radius: 1.6px;
+  background: currentColor;
+  display: block;
+}
+
+.app {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.screenPane {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 6px 26px 108px;
+  opacity: 0;
+  transform: translateY(14px) scale(0.995);
+  pointer-events: none;
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.6s var(--ease);
+  scrollbar-width: none;
+}
+
+.screenPane::-webkit-scrollbar {
+  display: none;
+}
+
+.screenPaneOn {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.homebar {
+  position: absolute;
+  bottom: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 132px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(242, 239, 233, 0.28);
+  z-index: 35;
+}
+
+/* ---------- 演示用提示条（只在桌面宽屏出现） ---------- */
+.hintBar {
+  display: flex;
+  gap: 10px;
+  color: var(--ink-3);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hintBar span {
+  padding: 7px 13px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+}
+
+.hintBar b {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+@media (max-width: 900px), (max-height: 900px) {
+  .device {
+    transform: scale(0.86);
+  }
+  .studio {
+    gap: 0;
+  }
+  .hintBar {
+    display: none;
+  }
+}
+
+/* 窄屏：手机模型退场，直接铺满，变成真机 App */
+@media (max-width: 430px) {
+  body {
+    align-items: flex-start;
+  }
+  .studio {
+    padding: 0;
+    width: 100%;
+  }
+  .device {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+    padding: 0;
+    transform: none;
+    box-shadow: none;
+  }
+  .screen {
+    border-radius: 0;
+  }
+  .island,
+  .statusbar,
+  .homebar {
+    display: none;
+  }
+  .hintBar {
+    display: none;
+  }
+}
