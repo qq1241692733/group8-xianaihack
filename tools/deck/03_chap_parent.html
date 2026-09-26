@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><title>章节 · 为人父母</title>
+<link rel="stylesheet" href="deck.css">
+<style>
+  .stage{align-items:flex-start;padding-left:150px}
+  .rail{
+    position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--warm);
+    transform:scaleY(0);transform-origin:50% 0;opacity:.9;
+  }
+  .idx{font-size:120px;font-weight:200;color:var(--ink-3);opacity:0;line-height:1}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="rail an-fade" style="animation-delay:.2s"></div>
+
+  <div class="idx an-rise" style="animation-delay:.25s">02</div>
+  <div class="gap-sm"></div>
+
+  <div class="kicker an-rise" style="animation-delay:.5s">为 人 父 母</div>
+  <div class="gap"></div>
+
+  <div class="title" style="text-align:left;max-width:1180px">
+    <div class="line an-rise" style="animation-delay:.9s">他第一次<span class="hl">松开我的手</span>。</div>
+  </div>
+  <div class="gap"></div>
+
+  <div class="sub an-rise" style="animation-delay:1.55s;text-align:left">
+    一年里散落的那些「第一次」——照片、笑声、那段旧录音，<br>
+    说一句话，就能找回来。
+  </div>
+
+  <div class="gap-lg"></div>
+  <div class="rule an-grow" style="animation-delay:2.1s"></div>
+</div>
+
+<script>
+document.querySelector('.rail').animate(
+  [{transform:'scaleY(0)'},{transform:'scaleY(1)'}],
+  {duration:900,delay:200,fill:'both',easing:'cubic-bezier(.22,.61,.36,1)'});
+window.__DURATION=2900;
+window.__seek=(t)=>document.getAnimations().forEach(a=>{try{a.pause();a.currentTime=t}catch(e){}});
+window.__ready=true;
+</script>
+</body>
+</html>

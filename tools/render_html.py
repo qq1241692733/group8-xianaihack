@@ -33,6 +33,7 @@ import shutil
 import subprocess
 import sys
 import time
+import uuid
 from pathlib import Path
 
 import imageio_ffmpeg
@@ -64,9 +65,10 @@ async def render_card(page, card: dict, work: Path, out_w: int | None):
     hold = float(card.get("hold", 0))          # 末尾定格秒数（字幕读完用）
     n_hold = round(hold * fps)
 
-    frames_dir = work / f"card_{cid}"
-    if frames_dir.exists():
-        shutil.rmtree(frames_dir)
+    # ⚠️ 每次渲进一个带随机后缀的新目录，**绝不能 rmtree 旧目录**：
+    #    运行时环境有批量删除守卫（一次删超过 50 个文件会被拦），
+    #    而一卡就是上百个 PNG，必然触发。旧目录留着，由调用方按需清理。
+    frames_dir = work / f"card_{cid}_{uuid.uuid4().hex[:8]}"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
     for i in range(n):

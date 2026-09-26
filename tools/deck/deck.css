@@ -1,0 +1,108 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   此刻 · 横屏演示卡片系统   1920×1080 · 纸感浅色
+
+   三条纪律（来自项目长期约定，勿回退）：
+     ① 纸面上「更亮底」无效（#FDFDFC vs #FFFFFF 只差两级）→ 层级必须靠极浅落影。
+     ② 一屏最多一颗彩色球 + 一处金。金只出现在「你按下的那一下」。
+     ③ 不给数字、不给奖励、不出现「第 N 天 / 已记录 N 条」这类句式。
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root{
+  --paper:#F4F2ED;
+  --paper-2:#EAE6DC;
+  --card:#FFFFFF;
+  --fill-2:#F1F1F3;
+
+  --ink:#1C1C1E;
+  --ink-2:#6E6E73;
+  --ink-3:#9C9CA2;
+
+  --blue:#3A5ED6;      /* 昼版球心 */
+  --blue-deep:#1A408C;
+  --warm:#B8842F;      /* 昼版金（注意：昼版 --warm-bright 是更深的 #8A5F1C） */
+  --warm-bright:#8A5F1C;
+
+  --line:rgba(28,28,30,.10);
+  --line-2:rgba(28,28,30,.16);
+
+  --sh-1:0 1px 3px rgba(28,28,30,.07);
+  --sh-2:0 2px 10px rgba(28,28,30,.07);
+  --sh-3:0 10px 34px rgba(28,28,30,.09);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  background:var(--paper);
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 底纹：极淡的两处光晕，让纸面不死板（不抢主体） */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:
+    radial-gradient(760px 520px at 16% 22%, rgba(58,94,214,.055), transparent 70%),
+    radial-gradient(680px 480px at 86% 78%, rgba(184,132,47,.05), transparent 70%);
+}
+
+.stage{
+  position:relative;width:1920px;height:1080px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+
+/* ── 排版 ─────────────────────────────────────────────────────────────── */
+.kicker{
+  font-size:21px;font-weight:500;letter-spacing:.38em;color:var(--ink-2);
+  text-indent:.38em;                       /* letter-spacing 会在末字后留空，缩进补回居中 */
+  opacity:0;
+}
+.title{
+  font-size:78px;font-weight:600;line-height:1.34;letter-spacing:.012em;
+  text-align:center;max-width:1320px;
+  opacity:0;
+}
+.title .hl{color:var(--blue)}
+.sub{
+  font-size:32px;font-weight:400;line-height:1.6;color:var(--ink-2);
+  text-align:center;max-width:1080px;
+  opacity:0;
+}
+.gap-sm{height:22px}.gap{height:40px}.gap-lg{height:62px}
+
+/* ── 波形：16 根，高度写死（不随机，保证每次渲染一致） ────────────────── */
+.wave{display:flex;align-items:center;justify-content:center;gap:9px;height:96px;opacity:0}
+.wave i{
+  display:block;width:5px;border-radius:3px;background:var(--ink);
+  height:10px;opacity:.40;
+}
+.wave i.k-3n{background:var(--blue);opacity:.55}
+.wave i.k-gold{background:var(--warm);opacity:.9}
+
+/* ── 细线展开 ─────────────────────────────────────────────────────────── */
+.rule{height:1px;background:var(--line-2);width:0}
+
+/* ── 三种材质的示意牌（开场用，说明「记录一个场景」） ─────────────────── */
+.chips{display:flex;gap:20px;opacity:0}
+.chip{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  box-shadow:var(--sh-1);
+  padding:22px 30px;display:flex;align-items:center;gap:14px;
+  font-size:26px;color:var(--ink);
+  opacity:0;
+}
+.chip .dot{width:12px;height:12px;border-radius:50%;background:var(--ink-3)}
+.chip.c-sight .dot{background:var(--blue);opacity:.75}
+.chip.c-sound .dot{background:var(--ink);opacity:.55}
+.chip.c-word  .dot{background:var(--warm);opacity:.9}
+
+/* ── 动画：全部登记到 Web Animations，交给 __seek 统一驱动 ─────────────── */
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes grow{from{width:0}to{width:220px}}
+@keyframes barIn{from{height:10px}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.an-rise{animation:rise .78s cubic-bezier(.22,.61,.36,1) both}
+.an-fade{animation:fade .6s linear both}
+.an-grow{animation:grow .9s cubic-bezier(.22,.61,.36,1) both}

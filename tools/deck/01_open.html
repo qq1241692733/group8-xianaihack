@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><title>片头 · 这些记录有什么用</title>
+<link rel="stylesheet" href="deck.css">
+<style>
+  .line{opacity:0}
+  .line.dim{color:var(--ink-3);font-weight:400}
+  .brand{
+    position:absolute;left:96px;top:88px;display:flex;align-items:center;gap:14px;
+    font-size:26px;letter-spacing:.22em;color:var(--ink-2);opacity:0;
+  }
+  .brand .orb{
+    width:26px;height:26px;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%, #B7CFFA, #3A5ED6 62%, #1A408C);
+    box-shadow:0 2px 10px rgba(26,64,140,.28);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="brand an-fade" style="animation-delay:.25s">
+    <span class="orb"></span><span>此刻</span>
+  </div>
+
+  <div class="kicker an-rise" style="animation-delay:.35s">无 用 之 用</div>
+  <div class="gap"></div>
+
+  <div class="title">
+    <div class="line an-rise" style="animation-delay:.95s">这些记录，<span class="hl">有什么用</span>？</div>
+    <div class="line dim an-rise" style="animation-delay:1.70s">……没有。</div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <div class="title" style="font-size:64px">
+    <div class="line an-rise" style="animation-delay:2.45s">那它们，值得留下吗？</div>
+  </div>
+
+  <div class="gap-lg"></div>
+  <div class="wave an-fade" id="wave" style="animation-delay:3.15s"></div>
+  <div class="gap-sm"></div>
+  <div class="rule an-grow" style="animation-delay:3.45s"></div>
+
+</div>
+
+<script>
+const N=16, H=[14,30,46,24,60,36,52,18, 40,58,26,48,68,32,42,16];
+const w=document.getElementById('wave');
+for(let i=0;i<N;i++){
+  const b=document.createElement('i');
+  if(i===6) b.className='k-gold'; else if(i%3===0) b.className='k-3n';
+  b.animate([{height:'10px'},{height:H[i]+'px'}],
+            {duration:820,delay:3150+i*38,fill:'both',
+             easing:'cubic-bezier(.22,.61,.36,1)'});
+  w.appendChild(b);
+}
+window.__DURATION=4200;
+window.__seek=(t)=>document.getAnimations().forEach(a=>{try{a.pause();a.currentTime=t}catch(e){}});
+window.__ready=true;
+</script>
+</body>
+</html>

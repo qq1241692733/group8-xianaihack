@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><title>收尾 · 不必先有用</title>
+<link rel="stylesheet" href="deck.css">
+<style>
+  .final{
+    font-size:58px;font-weight:600;letter-spacing:.02em;color:var(--ink);
+    opacity:0;text-align:center;
+  }
+  .final .hl{color:var(--blue)}
+  .foot{
+    position:absolute;left:0;right:0;bottom:76px;text-align:center;
+    font-size:22px;letter-spacing:.2em;color:var(--ink-3);opacity:0;
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="kicker an-rise" style="animation-delay:.2s">可 以 混 合 · 不 必 完 整</div>
+  <div class="gap"></div>
+
+  <div class="title" style="font-size:62px">
+    <div class="line an-rise" style="animation-delay:.65s">可以一起，也可以<span class="hl">只留一样</span>。</div>
+  </div>
+
+  <div class="gap-lg"></div>
+
+  <div class="chips" style="opacity:1">
+    <div class="chip c-sight an-rise" style="animation-delay:1.35s"><span class="dot"></span>只有照片</div>
+    <div class="chip c-word  an-rise" style="animation-delay:1.55s"><span class="dot"></span>只有一句话</div>
+    <div class="chip c-sound an-rise" style="animation-delay:1.75s"><span class="dot"></span>只有声音</div>
+  </div>
+
+  <div class="gap-lg"></div>
+  <div class="rule an-grow" style="animation-delay:2.15s"></div>
+  <div class="gap-lg"></div>
+
+  <div class="final an-rise" style="animation-delay:2.5s">不必先有用，才值得留下。</div>
+
+  <div class="foot an-fade" style="animation-delay:3.2s">记 录 一 个 场 景 · 不 是 完 成 一 张 表</div>
+</div>
+
+<script>
+window.__DURATION=4000;
+window.__seek=(t)=>document.getAnimations().forEach(a=>{try{a.pause();a.currentTime=t}catch(e){}});
+window.__ready=true;
+</script>
+</body>
+</html>

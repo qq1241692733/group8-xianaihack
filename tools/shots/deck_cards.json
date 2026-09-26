@@ -1,0 +1,6 @@
+[
+  { "id": "01_open",        "url": "01_open.html",        "fps": 30, "hold": 0.7 },
+  { "id": "02_chap_alone",  "url": "02_chap_alone.html",  "fps": 30, "hold": 0.5 },
+  { "id": "03_chap_parent", "url": "03_chap_parent.html", "fps": 30, "hold": 0.5 },
+  { "id": "04_end",         "url": "04_end.html",         "fps": 30, "hold": 1.0 }
+]

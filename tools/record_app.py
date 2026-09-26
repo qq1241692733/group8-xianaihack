@@ -45,6 +45,7 @@ import shutil
 import subprocess
 import sys
 import time
+import uuid
 from pathlib import Path
 
 import imageio_ffmpeg
@@ -108,8 +109,7 @@ class Recorder:
 
     def save(self, outdir: Path) -> dict:
         """帧写盘 + 生成 ffmpeg concat 清单。返回本段的元信息。"""
-        if outdir.exists():
-            shutil.rmtree(outdir)
+        # ⚠️ 同上：不能 rmtree 旧帧目录（批量删除守卫），每次写进新目录。
         outdir.mkdir(parents=True, exist_ok=True)
 
         n = len(self.frames)
@@ -242,8 +242,10 @@ def encode(frames_dir: Path, out: Path, fps_cap: int = 0, scale: int = 2):
 
 # ── 主流程 ────────────────────────────────────────────────────────────────
 
-async def record_plan(plan: list[dict], work: Path, out: Path, max_w: int, keep: bool, scale: int = 2):
+async def record_plan(plan: list[dict], work: Path, out: Path, max_w: int, keep: bool,
+                      scale: int = 2, view: dict | None = None, mobile: bool = True):
     results = []
+    view = view or VIEW
     async with async_playwright() as p:
         browser = await p.chromium.launch(
             channel="chrome",
@@ -255,10 +257,10 @@ async def record_plan(plan: list[dict], work: Path, out: Path, max_w: int, keep:
             ],
         )
         ctx = await browser.new_context(
-            viewport=VIEW,
+            viewport=view,
             device_scale_factor=DSF,
-            is_mobile=True,
-            has_touch=True,
+            is_mobile=mobile,
+            has_touch=mobile,
             locale="zh-CN",
         )
         page = await ctx.new_page()
@@ -279,7 +281,7 @@ async def record_plan(plan: list[dict], work: Path, out: Path, max_w: int, keep:
             await page.wait_for_timeout(int(shot.get("tail", 700)))
             await rec.stop()
 
-            seg = work / f"frames_{sid}"
+            seg = work / f"frames_{sid}_{uuid.uuid4().hex[:6]}"
             meta = rec.save(seg)
             meta["id"] = sid
             meta["fps"] = round(meta["frames"] / meta["seconds"], 1) if meta["seconds"] else 0
@@ -320,6 +322,11 @@ def main():
                     help="输出放大倍数。screencast 的原生尺寸恒等于 CSS viewport（如 390×844），"
                          "deviceScaleFactor 对它无效，所以靠这里放大到发布尺寸。")
     ap.add_argument("--keep", action="store_true", help="保留帧（默认保留，调试用）")
+    ap.add_argument("--width", type=int, default=390, help="视口宽（横屏舞台用 1920）")
+    ap.add_argument("--height", type=int, default=844, help="视口高（横屏舞台用 1080）")
+    ap.add_argument("--no-mobile", action="store_true",
+                    help="关掉 is_mobile/has_touch。横屏 1920×1080 的舞台页必须关，"
+                         "否则 Chrome 会按移动视口处理，页面布局与预期不符。")
     args = ap.parse_args()
 
     plan = json.loads(Path(args.plan).read_text(encoding="utf-8"))
@@ -327,7 +334,9 @@ def main():
     work = Path(args.work)
     work.mkdir(parents=True, exist_ok=True)
     started = time.time()
-    asyncio.run(record_plan(plan, work, Path(args.out), args.max_width, args.keep, args.scale))
+    asyncio.run(record_plan(plan, work, Path(args.out), args.max_width, args.keep,
+                            args.scale, {"width": args.width, "height": args.height},
+                            not args.no_mobile))
     print(f"用时 {time.time() - started:.1f}s")
 
 
