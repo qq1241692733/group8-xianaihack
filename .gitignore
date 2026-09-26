@@ -1,5 +1,8 @@
-# ---- 忽略：内部文档与过程稿（不对外） ----
-docs/
+# ---- 文档：只收结论态 md（评委可读），截图与存量 HTML 不入库 ----
+docs/*
+!docs/*.md
+
+# ---- 忽略：过程稿与历史归档 ----
 _archive/
 _process/
 
@@ -24,6 +27,7 @@ release/
 node_modules/
 dist/
 dist-ssr/
+dist_bak_*/
 *.local
 
 # ---- 编辑器与系统 ----
