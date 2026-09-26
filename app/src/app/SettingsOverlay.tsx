@@ -134,8 +134,8 @@ export function SettingsOverlay() {
         </div>
 
         <p className={styles.note}>
-          填了就用浏览器直连这个地址；不填则走开发服务器上的代理——打包后的 App 里没有那个
-          代理，也就没有 AI。
+          App 已内置一份默认配置，装上就能用。填了你自己的，就从这一刻起改用你的；
+          点「清除」会关掉 AI，回到内置的语句库。
         </p>
         <p className={styles.warn}>
           <b>这个模型必须是多模态的。</b>照片打标也用它读图，只有一个模型位。

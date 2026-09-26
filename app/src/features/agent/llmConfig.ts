@@ -21,6 +21,27 @@ export interface LlmConfig {
 }
 
 const KEY = 'cike:llm'
+
+/**
+ * 构建期预置的默认配置（vite.config.ts 的 define 注入，仅 production）。
+ * 用户拍板 2026-09-27：APK 开箱即用真 AI。设置里保存过任何配置后，预置即被覆盖；
+ * 「清除」会写入一份显式空配置——那之后不再回落预置，AI 回到剧本兜底。
+ */
+declare const __CIKE_LLM_PRESET__: { baseUrl: string; apiKey: string; model: string }
+
+function preset(): LlmConfig {
+  try {
+    const p = __CIKE_LLM_PRESET__
+    return {
+      baseUrl: typeof p?.baseUrl === 'string' ? p.baseUrl : '',
+      apiKey: typeof p?.apiKey === 'string' ? p.apiKey : '',
+      model: typeof p?.model === 'string' ? p.model : '',
+    }
+  } catch {
+    return { ...EMPTY }
+  }
+}
+
 const EMPTY: LlmConfig = { baseUrl: '', apiKey: '', model: '' }
 
 /** 懒读一次就缓存。多处调用必须看到同一份，且引用要稳定（useSyncExternalStore 要求）。 */
@@ -34,17 +55,20 @@ function emit(): void {
 function read(): LlmConfig {
   try {
     const raw = window.localStorage.getItem(KEY)
-    if (!raw) return { ...EMPTY }
-    const parsed = JSON.parse(raw) as Partial<LlmConfig>
-    return {
-      baseUrl: typeof parsed.baseUrl === 'string' ? parsed.baseUrl : '',
-      apiKey: typeof parsed.apiKey === 'string' ? parsed.apiKey : '',
-      model: typeof parsed.model === 'string' ? parsed.model : '',
+    if (raw) {
+      // 只要存过（哪怕是显式空配置），就以它为准——「清除」之后不回落预置。
+      const parsed = JSON.parse(raw) as Partial<LlmConfig>
+      return {
+        baseUrl: typeof parsed.baseUrl === 'string' ? parsed.baseUrl : '',
+        apiKey: typeof parsed.apiKey === 'string' ? parsed.apiKey : '',
+        model: typeof parsed.model === 'string' ? parsed.model : '',
+      }
     }
   } catch {
-    // 隐私模式 / 存坏了：当作没配，功能不降级（仍然走代理）。
-    return { ...EMPTY }
+    // 存坏了：当作没配，继续走预置。
   }
+  // 从未配置过：回落构建期预置（APK 开箱即用）。
+  return preset()
 }
 
 function ensure(): LlmConfig {
@@ -69,9 +93,9 @@ export function saveLlmConfig(next: LlmConfig): void {
   }
   snap = cleaned
   try {
-    // 配不全就不留痕：半套配置比没有配置更难排查。
+    // 配不全就显式留空痕：覆盖预置（用户主动清了就该真的关掉），半套配置比没有更难排查。
     if (isLlmConfigured(cleaned)) window.localStorage.setItem(KEY, JSON.stringify(cleaned))
-    else window.localStorage.removeItem(KEY)
+    else window.localStorage.setItem(KEY, JSON.stringify(EMPTY))
   } catch {
     // 存储不可用：这次会话里仍然生效。
   }
