@@ -18,6 +18,12 @@ const config: CapacitorConfig = {
     // 这里不开 allowMixedContent —— 全部走本地 https，没有混合内容需求。
     allowMixedContent: false,
   },
+  plugins: {
+    // APK 里没有 /api/llm 代理，AI 走「设置里自备配置 → 直连厂商」。
+    // WebView 的 origin 是 https://localhost，厂商 CORS 白名单未必放行——
+    // 开启后 fetch 全部走安卓原生网络栈，跨域不再是问题（只影响原生壳，Web 端不变）。
+    CapacitorHttp: { enabled: true },
+  },
 }
 
 export default config
