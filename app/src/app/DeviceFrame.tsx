@@ -13,10 +13,13 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
       </div>
       <div className="hintBar">
         <span>
-          建议路径：先按几次 <b>开始专注</b>，它不会启动
+          在「此刻」上，把 <b>文字 / 图片 / 声音</b> 攒进那颗球
         </span>
         <span>
-          然后点最小的那行 <b>留下一刻</b> → 再去 <b>理解</b>
+          然后 <b>长按</b>「记下此刻」，一次落成一件事
+        </span>
+        <span>
+          再去 <b>发现</b> 与 <b>理解</b>
         </span>
       </div>
     </div>

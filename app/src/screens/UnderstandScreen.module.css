@@ -1,35 +1,89 @@
-.head {
+/*
+ * 「理解」是四屏里唯一的对话页：动作（输入框）要永远停在手指那一边。
+ * flex 列把流撑满，输入框因此落在屏幕底部；内容超出时照常由 pane 滚动。
+ * padding-bottom 归零——底部那 108px 留白改由 .composer 自己承担（见下）。
+ *
+ * 用 `section.pane` 而不是 `.pane`：global.css 的 `.screenPane` 用的是 padding 简写，
+ * 同层单类选择器谁在后面谁赢，实测它盖过了模块里的 padding-bottom，底部那 108 没被让开，
+ * 流因此撑不满、输入框落不到底。带上标签选择器提高一级，稳定盖过它。
+ */
+section.pane {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+
+/*
+ * 页头：标题在左，历史 / 新增在右。与发现页同构（.topRow + .topActions），
+ * 三屏的页头因此是同一个层级，不再各写各的。
+ */
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   margin-top: 14px;
 }
 
-.eyebrowFlat {
+/* 「理解」大标题：自己不带外边距，行距由 .topRow 给。 */
+.titleFlat {
   margin: 0;
 }
 
-.title {
-  font-family: var(--serif);
-  font-size: 17px;
-  margin-top: 5px;
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 4px;
 }
 
-.orb {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  flex: 0 0 auto;
-  background: radial-gradient(
-    circle at 35% 30%,
-    rgba(232, 176, 106, 0.9),
-    rgba(232, 176, 106, 0.15) 55%,
-    transparent 70%
-  );
-  box-shadow: 0 0 30px -6px rgba(232, 176, 106, 0.5);
+/* 「历史对话」：一句话按钮，和「示例数据」同一档——它不承诺跳转，只是开一个浮层。 */
+.textBtn {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  transition: color 0.3s var(--ease);
+}
+
+.textBtn:hover {
+  color: var(--ink-2);
+}
+
+/* 「新增对话」：与发现页那枚「+」同一档——图标钮、不上色。 */
+.iconBtn {
+  border: 0;
+  background: none;
+  padding: 4px;
+  margin: -4px -4px -4px 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  transition: color 0.24s var(--ease);
+}
+
+.iconBtn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.iconBtn:hover {
+  color: var(--ink);
+}
+
+.iconBtn:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 .stream {
+  flex: 1 1 auto;
   margin-top: 24px;
   display: flex;
   flex-direction: column;
@@ -76,60 +130,124 @@
 
 /* ---------- 8/17 记忆卡片 ---------- */
 
-.card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--glass);
+/* ---------- 选项与出口 ---------- */
+
+/* 「更新到发现」：次要按钮，不用强调色——要不要留下是由你决定的 */
+/* ---------- 空态：找回线索的入口 ---------- */
+
+.landing {
+  display: flex;
+  flex-direction: column;
 }
 
-.cardWave {
+.ask {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 11px 14px;
-  font-size: 11.5px;
+  gap: 10px;
+}
+
+/* 那枚 34px 的球从页头挪到了这里：它是这句话的主人，不是这一屏的装饰。 */
+.askOrb {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  display: inline-flex;
+}
+
+.askText {
+  font-size: 13px;
   letter-spacing: 0.06em;
   color: var(--ink-3);
 }
 
-.cardImg {
-  height: 116px;
-  background-size: cover;
-  background-position: center;
-}
-
-.cardBody {
-  padding: 12px 14px 15px;
-}
-
-.cardMeta {
-  font-size: 11.5px;
-  letter-spacing: 0.08em;
-  color: var(--ink-3);
-}
-
-.cardText {
-  margin-top: 6px;
+/* 空态里最大的一句。不催、不解释，只把门槛降下来：不必记得是哪一天。 */
+.lead {
+  margin: 22px 0 0;
   font-family: var(--serif);
-  font-size: 14.5px;
-  line-height: 1.8;
-  color: var(--ink-2);
+  font-size: 22px;
+  line-height: 1.75;
+  letter-spacing: 0.04em;
+  color: var(--ink);
 }
 
-/* ---------- 选项与输入 ---------- */
+.suggests {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
 
-.replies {
+/* 一条示例 = 一句可以直接说出去的话。行与行之间只有一条细线，不是一张张卡。 */
+.suggestRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  letter-spacing: 0.04em;
+  transition: color 0.22s var(--ease);
+}
+
+.suggestRow:hover {
+  color: var(--ink);
+}
+
+.suggestArrow {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  display: inline-flex;
+  color: var(--ink-4);
+}
+
+.suggestArrow svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- 档案卡（推荐语整理出的那一份）---------- */
+
+/* 先材料，后结论：档案里先摆原件，不先给判断。 */
+/* ---------- 输入框 ---------- */
+
+/* 输入框上面那行小字：说清「找的是哪一层」。本地查找，不上传。 */
+.scope {
+  margin: 0;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+}
+
+/*
+ * 输入框钉在底部：sticky + bottom:0 让它在对话变长、滚动时留在视口里。
+ * 上面的渐隐背景盖住滚到它后面去的文字（--screen-bg 昼夜都有）。
+ * padding-bottom:108 把输入框抬到底部那枚悬浮 TabBar 之上；顶部留白兼作渐隐区。
+ */
+.composer {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding-top: 22px;
+  padding-bottom: 108px;
+  background: linear-gradient(to bottom, transparent, var(--screen-bg) 34%);
 }
 
-.composer {
+.inputRow {
   display: flex;
   align-items: flex-end;
   gap: 10px;
-  margin-top: 22px;
 }
 
 .input {
@@ -156,25 +274,237 @@
   border-color: var(--ink-4);
 }
 
+/* 发送是一个圆：一支向上的箭。它不是「说」这个字，是一个动作。 */
 .send {
   flex: 0 0 auto;
-  padding: 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--glass);
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--fill);
   color: var(--ink-2);
-  font-family: var(--sans);
-  font-size: 13px;
   cursor: pointer;
-  transition: 0.3s var(--ease);
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.25s var(--ease),
+    color 0.25s var(--ease);
+}
+
+.send svg {
+  width: 17px;
+  height: 17px;
+  display: block;
 }
 
 .send:hover:not(:disabled) {
-  background: var(--glass-active);
+  background: var(--fill-2);
   color: var(--ink);
 }
 
 .send:disabled {
   opacity: 0.4;
   cursor: default;
+}
+
+/*
+ * 滚动锚点。新消息落下时把它滚进视口。
+ *
+ * scroll-margin-bottom 必须给——否则 scrollIntoView(block:'end') 会把它顶到滚动区最底，
+ * 压在钉底的输入框下面。这里留出输入框的视觉高度 + 底部那 108px 留白，
+ * 最后一条消息才会停在输入框上方。
+ */
+.end {
+  scroll-margin-bottom: 190px;
+}
+
+/* ---------- 守望卡（docs/23）---------- */
+
+/* 常驻在流的最顶。样式与消息卡同族（--glass + 细边），但更安静：
+ * 它不是对话的一部分，是对话开始前就已经在的东西。 */
+/* 删除：撤回无痕——不出现「已删除」的回执，按下即散（docs/23 边界五）。 */
+/* 设定动作是一句话，不是表单：一行输入 + 一个字按钮。 */
+/* ---------- 册回执（docs/23 §三）---------- */
+
+/* 单册回执：材质缩影 + 册名 + 期间。与消息卡同族（--glass + 细边）。 */
+.volReceipt {
+  max-width: 300px;
+  padding: 15px 15px 13px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--glass);
+}
+
+.volThumbWave {
+  display: flex;
+  gap: 2.5px;
+  align-items: flex-end;
+  height: 38px;
+}
+
+.volThumbWave i {
+  flex: 1;
+  background: var(--ink-3);
+  opacity: 0.55;
+  border-radius: 1px 1px 0 0;
+}
+
+.volThumbPhoto {
+  display: flex;
+  overflow: hidden;
+  width: 84px;
+  height: 56px;
+  border-radius: 8px;
+}
+
+.volThumbPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.volQuote {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.volName {
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 16.5px;
+  line-height: 1.4;
+}
+
+.volEra {
+  margin-top: 5px;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+.volWhy {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+
+.volActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.volDraft {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink-4);
+}
+
+.volGone {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+
+/* 多册回执：册架的缩影。不报总数，点行原地展开。 */
+.volRows {
+  max-width: 300px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--glass);
+}
+
+.volRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 12px 15px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.25s var(--ease);
+}
+
+.volRow + .volRow {
+  border-top: 1px solid var(--line);
+}
+
+.volRow:hover {
+  background: var(--fill);
+}
+
+.volRow .volThumbWave,
+.volRow .volThumbPhoto {
+  flex: none;
+  width: 36px;
+  height: 25px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.volRow .volThumbWave {
+  background: var(--fill-2);
+  padding: 3px 4px 0;
+  /* 行里只有 36px：柱子抽稀到 7 根后，间距也得收窄，否则依旧挤成灰块。 */
+  gap: 1.5px;
+}
+
+/* 底是 --fill-2 浅灰，柱子沿用回执的 .55 透明度在行里几乎看不见。 */
+.volRow .volThumbWave i {
+  opacity: 0.85;
+}
+
+.volRow .volThumbPhoto {
+  width: 36px;
+  height: 25px;
+}
+
+.volThumbQuote {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 25px;
+  border-radius: 5px;
+  background: var(--fill-2);
+  font-family: var(--serif, serif);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--ink-3);
+}
+
+.volRowBody {
+  min-width: 0;
+}
+
+.volRowName {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.volRowEra {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.volRowGo {
+  margin-left: auto;
+  font-size: 15px;
+  color: var(--ink-4);
 }

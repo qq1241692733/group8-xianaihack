@@ -1,60 +1,78 @@
+/*
+ * 全屏浮层外壳。形状与基准稿的 .sheet 对齐：
+ * 屏幕底色铺满、内容自上而下排（头 / 说明 / 主体 / 底部按钮）。
+ * 原来那团 wash 径向光去掉了 —— 基准稿的浮层是平的，夜版也不例外。
+ */
+
 .overlay {
   position: absolute;
   inset: 0;
   z-index: 50;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(90% 55% at 50% 32%, rgba(232, 176, 106, 0.07), transparent 62%),
-    var(--overlay-bg);
+  background: var(--screen-bg);
   opacity: 0;
+  transform: translateY(14px);
   pointer-events: none;
-  transition: opacity 0.55s var(--ease);
+  transition:
+    opacity 0.3s var(--ease),
+    transform 0.38s var(--ease);
 }
 
 .on {
   opacity: 1;
+  transform: none;
   pointer-events: auto;
 }
 
-.ovIn {
-  padding: 64px 32px 44px;
-  flex: 1;
-  min-height: 0;
+/* 动作头：取消 · 标题 · 占位。它不吸顶滚动，浮层内容整体不滚动。 */
+.ovBar {
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.ovIn::-webkit-scrollbar {
-  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 56px 22px 0;
 }
 
 .ovClose {
-  position: absolute;
-  top: 44px;
-  right: 26px;
-  z-index: 5;
   border: 0;
   background: transparent;
   cursor: pointer;
   color: var(--ink-3);
   font-size: 12px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   font-family: var(--sans);
-  padding: 8px;
+  padding: 6px 0;
+  transition: color 0.2s var(--ease);
 }
 
 .ovClose:hover {
-  color: var(--ink-2);
+  color: var(--ink);
+}
+
+.ovTitle {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+/* 与取消等宽的占位，让标题真正居中 */
+.ovGap {
+  width: 26px;
+}
+
+.ovIn {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
 }
 
 @media (max-width: 430px) {
-  .ovIn {
-    padding-top: 56px;
-  }
-  .ovClose {
-    top: 22px;
+  .ovBar {
+    padding-top: 22px;
   }
 }

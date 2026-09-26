@@ -3,9 +3,9 @@
   left: 50%;
   bottom: 112px;
   transform: translate(-50%, 14px);
-  background: rgba(24, 24, 27, 0.94);
+  background: var(--toast-bg);
   border: 1px solid var(--line);
-  color: var(--ink-2);
+  color: var(--toast-ink);
   font-size: 12.5px;
   padding: 11px 18px;
   border-radius: var(--radius-pill);

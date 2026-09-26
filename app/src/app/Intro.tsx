@@ -9,9 +9,9 @@ import styles from './Intro.module.css'
  * 进 App 就无条件把 AI 全部对话流完，等你真去点「理解」，只剩结尾。
  * 现在对话归理解 Tab 自己管，第一次点开才开始。
  */
-export function Intro() {
+export function Intro({ skip }: { skip?: boolean }) {
   const [leaving, setLeaving] = useState(false)
-  const [gone, setGone] = useState(false)
+  const [gone, setGone] = useState(!!skip)
 
   if (gone) return null
 
@@ -19,9 +19,9 @@ export function Intro() {
     <div className={`${styles.intro}${leaving ? ` ${styles.out}` : ''}`}>
       <div className={styles.logo}>此刻</div>
       <div className={styles.slogan}>
-        这里不记录你有多努力。
+        把此刻留下来。
         <br />
-        它只是替你留住时间。
+        它只替你留住时间。
       </div>
       <button
         type="button"

@@ -1,0 +1,185 @@
+.wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 26px 30px;
+}
+
+.stamp {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 18px;
+}
+
+/* 正文是这一屏的主角：它把剩下的高度全部吃掉。没有边框、没有底色 —— 它就是一张纸。 */
+.body {
+  flex: 1 1 auto;
+  min-height: 110px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  outline: 0;
+  background: none;
+  resize: none;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+}
+
+.body::placeholder {
+  color: var(--ink-4);
+}
+
+/* ---------- 标签：用户自己写的线索 ---------- */
+
+.tagRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+
+.tagMark {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  display: inline-flex;
+  color: var(--ink-4);
+}
+
+.tagMark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.tagInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+}
+
+.tagInput::placeholder {
+  color: var(--ink-4);
+}
+
+/* ---------- 附上照片 / 声音 ---------- */
+
+.attachRow {
+  display: flex;
+  gap: 24px;
+  padding: 13px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.attach {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: none;
+  padding: 4px 0;
+  cursor: pointer;
+  color: var(--ink-3);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  transition: color 0.22s var(--ease);
+}
+
+.attach:hover {
+  color: var(--ink);
+}
+
+.attach svg,
+.attachedItem svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.attached {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attachedItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--fill);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.detach {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--ink-4);
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.2s var(--ease);
+}
+
+.detach:hover {
+  color: var(--ink-2);
+}
+
+.note {
+  margin: 14px 0 0;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+}
+
+/* ---------- 落下 ---------- */
+
+.foot {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.keep {
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--black);
+  color: var(--on-btn);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: opacity 0.25s var(--ease);
+}
+
+.keep:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}

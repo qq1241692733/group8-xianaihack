@@ -1,0 +1,510 @@
+/*
+ * 「发现」的样式 —— 档案化（docs/23）。
+ *
+ * 一个要盯住的风险：发现页是唯一「内容密度高」的页面，而首页几乎没有内容。
+ * 这两屏放一起会像两个产品。缓解只有两条——同一套间距刻度、同一个衬线标题档。
+ * 这里不再引入第三种视觉语言。
+ *
+ * ── v5：册架 → 卷内 ─────────────────────────────────────
+ * 节奏是这一页的身份：时间页密、小、匀；册架疏、大、不匀。
+ * 一屏约一册半，封面材质从内容长出来（波形地平线 / 照片条 / 原句）。
+ * 层级在纸面上靠「更亮的底 + 极浅落影」；深底上靠「更亮的底 + 细边」——
+ * 都走 token，两版各自成立。
+ * ────────────────────────────────────────────────────────
+ */
+
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.eyebrowFlat {
+  margin: 0;
+}
+
+.titleFlat {
+  margin: 0;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+/* 右上角的「+」：新建合集。与首页那枚「设置」同一档 —— 图标钮、不上色。 */
+.addBtn {
+  border: 0;
+  background: none;
+  padding: 4px;
+  margin: -4px -4px -4px 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  transition: color 0.24s var(--ease);
+}
+
+.addBtn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.addBtn:hover {
+  color: var(--ink);
+}
+
+.addBtn:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* 「示例数据」：一个普通按钮，不带箭头 —— 它不承诺跳转，只是说明这批是演示数据。 */
+.sample {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  transition: color 0.3s var(--ease);
+}
+
+.sample:hover {
+  color: var(--ink-2);
+}
+
+/* 卷内的返回行 */
+.back {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  transition: color 0.3s var(--ease);
+}
+
+.back:hover {
+  color: var(--ink-2);
+}
+
+/* ---------- 「正在帮你留意」条（副题位）---------- */
+
+/* 守望在发现页的常驻显影。占副题位——这一屏的气质不用金句说，
+ * 守望条本身就是气质（docs/23）。只展示，不管理；点整条去理解。 */
+/* 「正在帮你留意」条：守望在发现页的常驻显影。
+ * **刻意做矮**：它是一个提示，不是这一屏的主角 —— 主角是下面的册。
+ * 所以没有卡片的厚度、没有图标圆底，只留一行字的高度与一枚小标记。 */
+.watchStrip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  margin-top: 14px;
+  cursor: pointer;
+  background: var(--fill);
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  text-align: left;
+  font-family: var(--sans);
+  transition: background 0.25s var(--ease);
+}
+
+.watchStrip:hover {
+  background: var(--fill-2);
+}
+
+.watchStripMark {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  display: inline-flex;
+  color: var(--ink-3);
+}
+
+.watchStripText {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watchStripHint {
+  flex: none;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+}
+
+/* ---------- 册架 ---------- */
+
+.shelf {
+  margin-top: 30px;
+}
+
+.slot {
+  animation: coverIn 0.6s var(--ease) both;
+}
+
+@keyframes coverIn {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cover + .cover,
+.slot + .slot {
+  margin-top: 44px;
+}
+
+.cover {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg, 18px);
+  padding: 20px 20px 22px;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+  box-shadow: var(--lift);
+  transition:
+    box-shadow 0.3s var(--ease),
+    transform 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.cover:hover {
+  box-shadow: var(--lift-strong);
+  border-color: var(--ink-4);
+}
+
+.cover:active {
+  transform: scale(0.988);
+}
+
+/* 已保留的册：细金边。金是「你按下的那一下」的回执（docs/17）。 */
+.coverKept {
+  border-color: var(--warm-line);
+}
+
+.coverTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.coverWhen {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+}
+
+.watchMark {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.watchMark svg {
+  width: 13px;
+  height: 13px;
+}
+
+.sampleMark {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+}
+
+/* 封面材质：波形地平线。声音主导的册，封面就是一列声。 */
+.horizon {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 3px;
+  height: 64px;
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+.horizon i {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: 1.5px 1.5px 0 0;
+  background: var(--ink-3);
+  opacity: 0.55;
+  transition: opacity 0.4s var(--ease);
+}
+
+.cover:hover .horizon i {
+  opacity: 0.8;
+}
+
+/* 封面材质：照片条。照片主导的册，封面是并排的几个取景框。 */
+.filmStrip {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.filmTile {
+  display: block;
+  flex: 1 1 0;
+  height: 78px;
+  min-width: 0;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--line);
+}
+
+/* 封面材质：原句即封面。一句话主导的册，把那句最长的摆出来。 */
+.coverWord {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.coverName {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-top: 6px;
+}
+
+.coverNote {
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink-3);
+  margin-top: 5px;
+}
+
+/* ---------- 卷内 ---------- */
+
+.volumeTitle {
+  font-size: 26px;
+}
+
+/* 出处行：档案的落款，不是装饰句。 */
+.provenance {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-4);
+}
+
+.span {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.sections {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 段头：细字 + 线性图标，不上色。单类型册不渲染它。 */
+.sectionHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink-4);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sectionHead svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 声音成列：一行一条，通栏波形。 */
+.soundRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 0;
+}
+
+.soundTime {
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.soundWave {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 30px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.soundWave i {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 4px;
+  border-radius: 1.5px;
+  background: var(--kind-sound);
+  opacity: 0.72;
+}
+
+.soundMeta {
+  flex: none;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+/* 照片成条：横向滚动，一屏一屏地翻。出血对齐 Pane 的 26px 内边距。 */
+.photoStrip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+  margin: 0 -26px;
+  padding-inline: 26px;
+}
+
+.photoTile {
+  position: relative;
+  flex: none;
+  width: 62%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--line);
+  scroll-snap-align: start;
+  margin: 0;
+}
+
+.photoTile figcaption {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  right: 10px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 一句话成引文：衬线大字独立成段。 */
+.quote {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 1px solid var(--line);
+}
+
+.quote p {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.quote cite {
+  display: block;
+  margin-top: 6px;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 操作 ---------- */
+
+.volumeActs {
+  display: flex;
+  gap: 18px;
+  margin-top: 34px;
+}
+
+/* 纯文字，不带框（17 号文档：这一页不叠第三个胶囊）。 */
+.act {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+
+.act:hover {
+  color: var(--ink-2);
+  border-bottom-color: var(--ink-4);
+}
+
+/* 已保留用强调色——全屏仍然只有一个强调色 */
+.actOn {
+  color: var(--warm-bright);
+}
+
+/* 结尾那句在册架之外 */
+.tail {
+  padding: 34px 16px 12px;
+}

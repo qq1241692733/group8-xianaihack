@@ -28,6 +28,16 @@ const TABS: TabDef[] = [
     ),
   },
   {
+    id: 'discover',
+    label: '发现',
+    icon: (
+      <>
+        <circle cx="9.5" cy="12" r="4" />
+        <circle cx="14.5" cy="12" r="4" />
+      </>
+    ),
+  },
+  {
     id: 'ai',
     label: '理解',
     icon: (

@@ -1,58 +1,85 @@
+/*
+ * 底部导航 —— 一枚悬浮的白胶囊（结构照基准稿 index_demo_light_v2.html）。
+ *
+ * 它从原来那条「顶部化开的渐隐条」换过来，是因为渐隐条在昼版纸白上会读成一层脏
+ * （paper 上的半透明屏幕色 = 一圈灰），而胶囊两版都成立：夜里有 --tabbar-blur 的
+ * 磨砂，昼里靠 --tabbar-shadow 从纸面上立起来。
+ *
+ * 四个 Tab 与它们的图标不动。选中的 Tab 用月白（--ink），**不用金色** ——
+ * 金在全屏只留给「你按下的那一下」的回执，导航条只是「你在哪里」。
+ */
 .tabbar {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 18px;
   z-index: 30;
-  padding: 12px 20px 26px;
   display: flex;
-  justify-content: center;
-  gap: 6px;
-  /* 顶部化开的一条渐隐，用的是屏幕底色而不是新颜色 */
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--screen-bg) 96%, transparent) 45%,
-    color-mix(in srgb, var(--screen-bg) 60%, transparent) 75%,
-    transparent
-  );
+  padding: 6px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--tabbar-bg);
+  border: 1px solid var(--tabbar-line);
+  box-shadow: var(--tabbar-shadow);
+  -webkit-backdrop-filter: var(--tabbar-blur);
+  backdrop-filter: var(--tabbar-blur);
+  transition:
+    opacity 0.3s var(--ease),
+    transform 0.34s var(--ease);
 }
 
 .tab {
-  flex: 1;
-  max-width: 104px;
   border: 0;
   background: transparent;
   cursor: pointer;
-  padding: 9px 6px 7px;
-  border-radius: 16px;
-  color: var(--ink-3);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 2px;
+  width: 58px;
+  padding: 5px 0 4px;
+  border-radius: 14px;
+  color: var(--tab-idle);
   font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  transition:
-    color 0.35s var(--ease),
-    background 0.35s var(--ease);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: color 0.22s var(--ease);
+}
+
+/* 选中的 Tab 用月白，不用金色。
+ * 金色在全屏只留给几处：发现页的「已保留」/ 时间页筛选的选中态 /
+ * 首页攒够之后那句提示。导航条只是「你在哪里」的指示，
+ * 不该去抢那些瞬间的注意力。
+ *
+ * 也不再给选中项一块填充底：实心胶囊会把导航读成一排按钮。
+ * 高亮交给字形本身——月白 + 略重的描边。 */
+.on {
+  color: var(--ink);
 }
 
 .tab svg {
-  width: 21px;
-  height: 21px;
+  width: 17px;
+  height: 17px;
   stroke: currentColor;
   fill: none;
-  stroke-width: 1.5;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.on {
-  color: #f0dcbb;
-  background: rgba(232, 176, 106, 0.08);
+.on svg {
+  stroke-width: 1.85;
 }
 
 .tab:active {
   transform: scale(0.94);
+}
+
+@media (prefers-contrast: more) {
+  .tab {
+    color: var(--ink-2);
+  }
+  .on {
+    color: var(--ink);
+  }
 }

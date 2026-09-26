@@ -1,0 +1,550 @@
+/*
+ * 「此刻」首页 —— 一颗球、三个入口、一个长按。
+ *
+ * 颜色只从 tokens.css 取。这里唯一的字面值差异是那颗球：它由 dotOrb.ts 画在画布上，
+ * 色值走 cssVar('--c1'/'--c2')，所以 CSS 里不出现球色。
+ *
+ * 坐标系：本页的容器是 .app 里的一个 Pane（370 宽，状态栏与底栏都在它之外/之上）。
+ * 纵向数字按本页高度排：球悬在上半屏，三个入口 / 提示 / 长按按钮拢成底部控制簇
+ * （.controls，锚底），拇指半径内只有这一簇。
+ */
+
+/* 这一屏不是文档：没有内边距、不滚动。 */
+.field {
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: var(--screen-bg);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  /* 卫星卡入场用的那点回弹。day/night 同一条，不随主题变。 */
+  --sat-spring: cubic-bezier(0.2, 1.32, 0.36, 1);
+}
+
+/* ---------- 左上身份栏 ---------- */
+.topbar {
+  position: absolute;
+  top: 6px;
+  left: 30px;
+  right: 26px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  z-index: 6;
+  transition: opacity 0.28s var(--ease);
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.brand {
+  font-family: var(--serif);
+  font-size: 15px;
+  letter-spacing: 0.34em;
+  color: var(--ink);
+}
+
+.brandRow {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+/* 「/ THE TIME」：与「此刻」同一行的罗马字，小、疏、更淡 —— 它是落款，不是标题。 */
+.brandEn {
+  font-family: var(--serif);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--ink-4);
+}
+
+.today {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 设置：一屏只留一个发光体，所以它是一枚安静的图标钮——不上色、无底、无环。
+ * 触摸目标靠 padding 撑起来（比三个采集入口小一档，但不该难点）。 */
+.settings {
+  border: 0;
+  background: none;
+  padding: 7px;
+  margin: -7px -7px 0 0;
+  color: var(--ink-4);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: color 0.24s var(--ease);
+}
+
+.settings svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+}
+
+.settings:hover {
+  color: var(--ink-2);
+}
+
+.settings:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ---------- 球：整屏唯一的发光体 / 唯一的颜色 ---------- */
+.orbwrap {
+  position: absolute;
+  left: 50%;
+  top: 290px;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px;
+  z-index: 4;
+}
+
+.orbCanvas {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 280px;
+  height: 280px;
+  opacity: 0;
+  transition: opacity 1.5s var(--ease);
+}
+
+.orbCanvasOn {
+  opacity: 1;
+}
+
+/* 碎片飞回球心用的整屏画布。压在 UI 之下（球 z-index 4）—— 碎片是「被球吸进去」，
+ * 所以它必须从球后面掠过，而不是浮在球上面。 */
+.sparkCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* 涟漪：留下之后唯一的一点点回响，不是庆祝 */
+.ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180px;
+  height: 180px;
+  margin: -90px 0 0 -90px;
+  border-radius: 50%;
+  border: 1px solid var(--ripple-line);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rippleGo {
+  animation: rip 0.95s var(--ease) forwards;
+}
+
+@keyframes rip {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.72);
+    opacity: 0;
+  }
+}
+
+/* ---------- 攒下的元素：绕球的小卡 ----------
+ * 坐标与球心同源：.sats 铺满 orbwrap，卡以 left/top 50% 为原点，再按方向平移。
+ * 平移量由 SatelliteLayer 现算，写进 --rest。 */
+.sats {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sat {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: var(--rest) scale(1);
+  animation: satIn 0.42s var(--sat-spring) both;
+  will-change: transform, opacity;
+}
+
+@keyframes satIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: var(--rest) scale(1);
+  }
+}
+
+/* 落下：卡飞回球心。放在 .sat 之后，两条规则的优先级才轮得到它。 */
+.satOut {
+  animation: none;
+  transition:
+    transform 0.5s var(--ease),
+    opacity 0.4s var(--ease);
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+}
+
+.satCard {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  /* 卡会压在球上面，所以底**必须是不透的** —— 夜里的 --surface 是半透明的，
+   * 单用它会连球的网点一起透出来，卡就糊在球里了。先铺屏底，再叠一层浮面。 */
+  background-color: var(--screen-bg);
+  background-image: linear-gradient(var(--surface), var(--surface));
+  border: 1px solid var(--line-2);
+  box-shadow: var(--lift-strong);
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  transition: transform 0.16s var(--ease);
+}
+
+.satCard:disabled {
+  cursor: default;
+}
+
+.satCard:not(:disabled):active {
+  transform: scale(0.94);
+}
+
+.satCard:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 3px;
+}
+
+.satWord {
+  max-width: 112px;
+  padding: 9px 11px;
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink);
+  text-align: left;
+  word-break: break-all;
+}
+
+.satPhoto {
+  width: 66px;
+  height: 66px;
+  background: var(--fill);
+}
+
+.satPhoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.satSound {
+  width: 78px;
+  padding: 9px 10px;
+}
+
+.satBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 22px;
+}
+
+.satBars i {
+  flex: 1;
+  background: var(--ink-3);
+  border-radius: 1px;
+  opacity: 0.8;
+}
+
+.satDur {
+  margin-top: 6px;
+  font-size: 9.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 取下来的 ×：挂在 .sat 上（不是卡片内），卡片为圆角裁了 overflow，放里面会被裁成半枚。
+ * 它是个纯装饰——点整张卡都是取下来，所以自己不吃指针。 */
+.satX {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--on-btn);
+  font-size: 10px;
+  line-height: 18px;
+  text-align: center;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* ---------- 三个入口：点一下往球上攒一个 ---------- */
+.entries {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  z-index: 6;
+}
+
+.entry {
+  position: relative;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-3);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  transition:
+    color 0.22s var(--ease),
+    transform 0.22s var(--spring, var(--ease));
+}
+
+.ring {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  display: grid;
+  place-items: center;
+  background: var(--glass);
+  transition:
+    transform 0.3s var(--sat-spring),
+    border-color 0.22s var(--ease);
+}
+
+.entry svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.entry:hover {
+  color: var(--ink-2);
+}
+
+.entry:hover .ring {
+  transform: scale(1.08);
+  border-color: var(--ink-4);
+}
+
+.entry:active {
+  transform: scale(0.96);
+}
+
+.entry:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.entry:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* 攒了东西的入口：徽章亮起。徽章只在有东西时出现。 */
+.dotCount {
+  position: absolute;
+  top: -2px;
+  left: 30px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--warm);
+  color: #fff;
+  font-size: 9.5px;
+  line-height: 16px;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  transform: scale(0);
+  transition: transform 0.3s var(--sat-spring);
+}
+
+.entryFull .dotCount {
+  transform: scale(1);
+}
+
+/* ---------- 底部控制簇 ----------
+ * 三个入口 + 提示 + 长按按钮收在**同一个**贴着底部的容器里，而不是各自写死 top。
+ *
+ * 为什么：三段各自钉 top 时，入口会浮到屏幕中间，拇指要往上够；
+ * 而且它们与长按按钮的距离会随内容高度变化。收成一簇、锚在底部之后，
+ * 「入口 → 长按」的间距是常量，永远在拇指半径内——这是这一屏唯一的操作动线，
+ * 值得用布局表达，而不是用三个数字对齐。
+ *
+ * bottom 的下限是底栏：底栏占 697–750（本页高 767，见 DeviceFrame），
+ * 所以这一簇停在它上面 26px 处。 */
+.controls {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 96px;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* ---------- 交互提示 ---------- */
+.hint {
+  z-index: 6;
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.1em;
+  transition: color 0.3s var(--ease);
+}
+
+/* 攒够两件、或者正在落下时，提示转成暖色 —— 该按了 */
+.hintOn {
+  color: var(--warm);
+}
+
+/* ---------- 长按「记下此刻」：整屏唯一的确定 ---------- */
+.btnwrap {
+  width: 100%;
+  z-index: 7;
+}
+
+.commit {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--cta);
+  color: var(--on-cta);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+  touch-action: none;
+  /* 原来那层深落影是给黑胶囊配的；浅底上它会显得脏，所以不投影。 */
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.34s var(--ease),
+    opacity 0.3s var(--ease),
+    background 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+
+.commit:disabled {
+  opacity: 0.34;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.commit:not(:disabled):active {
+  transform: scale(0.985);
+}
+
+.commit:focus-visible {
+  outline: 2px solid var(--warm);
+  outline-offset: 3px;
+}
+
+/* 长按进度：一条充满按钮内部的浅色带。宽度由 rAF 直接写，不走 React。
+ * 颜色是「按钮底色被提亮一档」—— --on-btn 就是按钮上那层色（昼白 / 夜深），
+ * 兑一点透明即可，不必为两版各写一条 rgba。 */
+.commitFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: color-mix(in srgb, var(--on-cta) 18%, transparent);
+  pointer-events: none;
+}
+
+.commitLabel {
+  position: relative;
+  z-index: 1;
+}
+
+/* 按钮下面那行小字：只说一次这个按钮能装什么。它不催，也不解释规则。 */
+.commitNote {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+}
+
+/* ---------- 浮层打开时，首页元素整体淡出 ---------- */
+.dimmed .topbar,
+.dimmed .controls {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s var(--ease);
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-contrast: more) {
+  .today,
+  .hint,
+  .settings {
+    color: var(--ink);
+  }
+}
+
+/* 降级动效：卡直接落位，不做入场回弹 */
+@media (prefers-reduced-motion: reduce) {
+  .sat {
+    animation: none;
+  }
+}

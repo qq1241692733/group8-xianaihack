@@ -23,10 +23,19 @@
       "Bash(powershell.exe -NoProfile -Command 'Get-CimInstance Win32_Process -Filter \"name='\\\\''node.exe'\\\\''\" | Select-Object ProcessId, @{n='\\\\''CmdLine'\\\\'';e={$_.CommandLine}} | Format-List')",
       "Bash(powershell.exe -NoProfile -Command \"Stop-Process -Id 13812,36704 -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; 'done'\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 3 http://localhost:5173/)",
-      "Bash(rm -rf node_modules)"
+      "Bash(rm -rf node_modules)",
+      "Bash(node tools/cdp-shots.cjs)",
+      "Bash(cd d:/ai/the_time && mkdir -p .tmp_shot/before .tmp_shot/after && cp _shot_*.png .tmp_shot/before/ && ls .tmp_shot/before/)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //PID 27400 //T //F)",
+      "Bash(rm -f _shot_*.png)",
+      "Bash(git check-ignore *)",
+      "Read(//c/Users/guope/AppData/Local/Temp/**)"
     ],
     "additionalDirectories": [
-      "C:\\Users\\guope\\AppData\\Local\\Temp"
+      "C:\\Users\\guope\\AppData\\Local\\Temp",
+      "D:\\ai\\the_time",
+      "D:\\ai\\the_time\\app"
     ]
   }
 }

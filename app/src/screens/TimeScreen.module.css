@@ -2,11 +2,61 @@
   margin-top: 10px;
 }
 
+/* 顶行：左边是「时间」那行小字，右边是「记录此刻」。 */
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 右上角的「+」：直接写一条。与首页那枚「设置」同一档 —— 图标钮、不上色。 */
+.addBtn {
+  border: 0;
+  background: none;
+  padding: 4px;
+  margin: 6px -4px 0 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  transition: color 0.24s var(--ease);
+}
+
+.addBtn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.addBtn:hover {
+  color: var(--ink);
+}
+
+.addBtn:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 .chips {
   display: flex;
   gap: 8px;
   margin-top: 18px;
   flex-wrap: wrap;
+}
+
+/* 筛选图标：与底部导航同一套语言（线性、无填充、颜色走 currentColor）。
+ * 它替掉的是 `🎧 📷 ✍️` —— emoji 会一次带进三种色相。 */
+.chips svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
 }
 
 .tl {
@@ -15,7 +65,7 @@
 
 .tlDay {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
   margin: 26px 0 14px;
 }
@@ -24,11 +74,6 @@
   font-size: 12.5px;
   color: var(--ink-2);
   letter-spacing: 0.1em;
-}
-
-.n {
-  font-size: 11px;
-  color: var(--ink-3);
 }
 
 .rule {
@@ -73,13 +118,27 @@
   min-width: 0;
 }
 
+/* 种类行：图标 + 类型名。**不上色** —— 用 --ink-3 而不是 --warm。
+ * 原来这里是暖金，等于把「强调色」用成了一张类别标签；而三屏加起来只允许
+ * 一个金色落点（发现页的「已保留」），金是「你按下的那一下」的回执，不是装饰。 */
 .media {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 11.5px;
-  color: var(--warm);
+  color: var(--ink-3);
   letter-spacing: 0.06em;
+}
+
+.media svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .cap {
@@ -107,23 +166,82 @@
   background-position: center;
 }
 
-.miniDots {
-  display: flex;
-  gap: 5px;
-  margin-top: 9px;
-}
-
-.miniDots i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--ink-4);
-}
-
-.hit {
-  background: rgba(232, 176, 106, 0.75);
-}
-
 .tail {
   padding: 34px 16px 10px;
+}
+
+/* ---------- 一次落下的几条：收成一条 ----------
+ * 它们是「一件事」，摊成三行会把那件事拆散。收起来只露一行，点开看里面的。
+ * 收起来的那一行不上色、不加边框强调——它仍是时间流里普通的一格，
+ * 只是它自己内部有层次。 */
+.moment {
+  border-radius: 20px;
+  transition: background 0.3s var(--ease);
+}
+
+.momentHead {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 20px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.3s var(--ease),
+    transform 0.35s var(--ease);
+}
+
+.momentHead:hover {
+  background: var(--glass);
+}
+
+.momentHead:active {
+  transform: scale(0.985);
+}
+
+.momentHead:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 2px;
+}
+
+.momentHead .cap {
+  display: block;
+}
+
+/* 「此刻」是这件事的名字，不是类别标签 —— 用 ink-3，与类型行同一档。 */
+.mTag {
+  letter-spacing: 0.16em;
+}
+
+.mChevron {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  margin-top: 4px;
+  fill: none;
+  stroke: var(--ink-4);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s var(--ease);
+}
+
+.momentHead[aria-expanded='true'] .mChevron {
+  transform: rotate(180deg);
+}
+
+/* 展开后里面几条退一档：缩进 + 左边一条细线，读起来是「附属于上面那件事」。 */
+.momentItems {
+  margin: 0 14px 10px 72px;
+  border-left: 1px solid var(--line);
+  padding-left: 6px;
+}
+
+.momentItems .entry {
+  padding: 10px;
 }

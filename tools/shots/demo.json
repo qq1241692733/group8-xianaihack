@@ -1,0 +1,29 @@
+[
+  {
+    "id": "longpress",
+    "url": "?stage=staged&theme=day",
+    "hydrate": 7500,
+    "lead": 800,
+    "acts": [
+      { "wait": 1500 },
+      { "mark": "press-down" },
+      { "longpress": [195, 582], "ms": 2000 },
+      { "mark": "press-up" },
+      { "wait": 2400 }
+    ],
+    "tail": 900
+  },
+  {
+    "id": "volume",
+    "url": "?stage=discover&volume=1&theme=day",
+    "hydrate": 7000,
+    "lead": 800,
+    "acts": [
+      { "wait": 1200 },
+      { "mark": "scroll-start" },
+      { "wheel": 800, "steps": 16, "step_ms": 70 },
+      { "wait": 1000 }
+    ],
+    "tail": 800
+  }
+]

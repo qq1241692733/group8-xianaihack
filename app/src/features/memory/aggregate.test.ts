@@ -92,7 +92,7 @@ describe('把「无用」写进 schema', () => {
     expect(JSON.stringify(entries)).toBe(before)
 
     const digest = memoryDigest(entries)
-    expect(Object.keys(digest).sort()).toEqual(['emotions', 'recent', 'themes'])
+    expect(Object.keys(digest).sort()).toEqual(['clues', 'emotions', 'recent', 'themes'])
   })
 })
 

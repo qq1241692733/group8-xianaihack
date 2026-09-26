@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { seedIfEmpty } from '@/data/seed'
 
-import { addEntry, clearEntries, countEntries, getBlob, listByKind, listEntries } from './repo'
+import { addEntry, addMoment, clearEntries, countEntries, getBlob, listByKind, listEntries, updateEntryTags } from './repo'
 
 beforeEach(async () => {
   await clearEntries()
@@ -61,9 +61,9 @@ describe('记忆层', () => {
 
 describe('写入时提取标签', () => {
   it('一句话在写入那一刻就被切成主题与情绪', async () => {
-    const entry = await addEntry({ kind: 'word', text: '今天突然不想工作。' })
+    const entry = await addEntry({ kind: 'word', text: '今天又加班，在楼下站了一会儿才上去。' })
     expect(entry.tags.themes).toContain('工作')
-    expect(entry.tags.emotions).toContain('逃避')
+    expect(entry.tags.emotions).toContain('停顿')
   })
 
   it('采集时的现场线索落进 scene（原来是被丢掉的）', async () => {
@@ -74,6 +74,52 @@ describe('写入时提取标签', () => {
   it('标签如实标成 rule，绝不冒充 llm', async () => {
     const entry = await addEntry({ kind: 'word', text: 'x' })
     expect(entry.tagSource).toBe('rule')
+  })
+})
+
+describe('采集侧元数据（EXIF / 视觉 / 哈希）', () => {
+  it('相册来的照片用 EXIF 拍摄时间落进时间流，而不是上传的此刻', async () => {
+    const takenAt = new Date('2023-06-01T10:00:00').getTime()
+    const entry = await addEntry({
+      kind: 'photo',
+      createdAt: Date.now(),
+      exif: { takenAt, gps: { lat: 39.9, lon: 116.4 } },
+    })
+    expect(entry.createdAt).toBe(takenAt)
+    expect(entry.meta?.exif?.gps).toEqual({ lat: 39.9, lon: 116.4 })
+  })
+
+  it('元数据落进 meta，且不污染标签', async () => {
+    const entry = await addEntry({
+      kind: 'photo',
+      visual: { brightness: 0.6, warmth: 0.2, saturation: 0.3 },
+      imageHash: 'abcdef0123456789',
+      source: 'camera',
+    })
+    expect(entry.meta?.hash).toBe('abcdef0123456789')
+    expect(entry.meta?.source).toBe('camera')
+    expect(entry.tags.themes).toEqual([])
+  })
+
+  it('没有任何采集信号时不写空的 meta', async () => {
+    const entry = await addEntry({ kind: 'word', text: 'x' })
+    expect(entry.meta).toBeUndefined()
+  })
+
+  it('updateEntryTags 回写标签与来源，不动别的字段', async () => {
+    const entry = await addEntry({ kind: 'photo', imageHash: 'ffff' })
+    const updated = await updateEntryTags(
+      entry.id,
+      { scene: '桌上的两个杯子', themes: [], emotions: [], people: [], places: [], clues: [] },
+      'llm',
+    )
+    expect(updated?.tagSource).toBe('llm')
+    expect(updated?.tags.scene).toBe('桌上的两个杯子')
+    expect(updated?.meta?.hash).toBe('ffff')
+
+    const back = (await listEntries())[0]
+    expect(back?.tagSource).toBe('llm')
+    expect(back?.tags.scene).toBe('桌上的两个杯子')
   })
 })
 
@@ -104,6 +150,58 @@ describe('把「无用」写进 schema', () => {
     for (const entry of all) {
       expect(Object.keys(entry).filter((key) => /count|total|streak/i.test(key))).toEqual([])
     }
+  })
+})
+
+describe('记下此刻：一次落下的几条是一件事', () => {
+  it('整组共享同一个 momentId', async () => {
+    const entries = await addMoment([
+      { kind: 'photo', imageHash: 'aa' },
+      { kind: 'word', text: '风很舒服' },
+      { kind: 'sound', durationMs: 3000 },
+    ])
+
+    expect(entries).toHaveLength(3)
+    const ids = new Set(entries.map((entry) => entry.momentId))
+    expect(ids.size).toBe(1)
+    expect([...ids][0]).toMatch(/^mo_/)
+  })
+
+  it('每条各带各的东西：文字还在，blob 回读得到', async () => {
+    const blob = new Blob(['一段声音'], { type: 'audio/webm' })
+    const entries = await addMoment([
+      { kind: 'photo', imageHash: 'bb' },
+      { kind: 'word', text: '一句' },
+      { kind: 'sound', blob, durationMs: 2000 },
+    ])
+
+    expect(entries.find((e) => e.kind === 'word')?.text).toBe('一句')
+
+    const sound = entries.find((e) => e.kind === 'sound')
+    const ref = sound?.blobRef
+    if (!ref) throw new Error('带 blob 的那条应该有 blobRef')
+    expect(await (await getBlob(ref))?.text()).toBe('一段声音')
+
+    expect(entries.find((e) => e.kind === 'photo')?.blobRef).toBeUndefined()
+  })
+
+  it('整组都进了库', async () => {
+    await addMoment([
+      { kind: 'word', text: 'a' },
+      { kind: 'word', text: 'b' },
+    ])
+    expect(await countEntries()).toBe(2)
+  })
+
+  it('单独留下的一条没有 momentId', async () => {
+    const entry = await addEntry({ kind: 'word', text: 'x' })
+    expect(entry.momentId).toBeUndefined()
+  })
+
+  it('每一组是独立的：两次落下拿到两个不同的 momentId', async () => {
+    const first = await addMoment([{ kind: 'word', text: 'a' }])
+    const second = await addMoment([{ kind: 'word', text: 'b' }])
+    expect(first[0]?.momentId).not.toBe(second[0]?.momentId)
   })
 })
 

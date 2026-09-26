@@ -1,117 +1,59 @@
-.nothing {
-  flex: 1;
+/*
+ * 「什么也不留」。
+ * 词汇与取值逐条来自基准稿 index_demo_light_v2.html 的 buildBlank。
+ */
+
+.blankwrap {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  gap: 10px;
+  gap: 26px;
 }
 
-.lead {
-  font-family: var(--serif);
-  font-size: 34px;
-  font-weight: 500;
-  margin: 0;
-  letter-spacing: 0.04em;
-}
-
-.sub {
-  font-size: 13.5px;
-  color: var(--ink-3);
-  letter-spacing: 0.04em;
-  margin: 0;
-}
-
-.breath {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  margin: 38px 0 26px;
-  display: grid;
-  place-items: center;
-}
-
-.ring {
-  position: absolute;
-  inset: 0;
+/* 一个虚线的圆，旋着淡入 120° —— 它不是一个待填满的环，是一个「就此打住」。 */
+.dashed {
+  width: 126px;
+  height: 126px;
   border-radius: 50%;
-  border: 1px solid rgba(232, 176, 106, 0.16);
+  border: 1.4px dashed var(--dashed-line);
+  animation: dashedIn 0.75s cubic-bezier(0.3, 0.9, 0.3, 1) 0.12s forwards;
+  opacity: 0.4;
+  transform: rotate(0deg) scale(0.86);
 }
 
-.ringInner {
-  inset: 26px;
+@keyframes dashedIn {
+  0% {
+    transform: rotate(0deg) scale(0.86);
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotate(120deg) scale(1);
+    opacity: 1;
+  }
 }
 
-.ringDraw {
-  position: absolute;
-  inset: 0;
-  transform: rotate(-90deg);
-}
-
-.ringDraw circle {
-  fill: none;
-  stroke-width: 1.5;
-}
-
-.tk {
-  stroke: rgba(242, 239, 233, 0.07);
-}
-
-.blob {
-  width: 132px;
-  height: 132px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 40% 35%,
-    rgba(232, 176, 106, 0.55),
-    rgba(232, 176, 106, 0.1) 60%,
-    transparent 72%
-  );
-}
-
-.now {
-  position: absolute;
+.bt {
   font-family: var(--serif);
-  font-size: 15px;
-  letter-spacing: 0.5em;
+  font-size: 17px;
+  letter-spacing: 0.08em;
   color: var(--ink-2);
-  text-indent: 0.5em;
+  text-align: center;
 }
 
-.ambient {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  height: 34px;
-  margin-top: 4px;
+.bs {
+  font-size: 10.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin-top: -12px;
 }
 
-.ambient i {
-  display: block;
-  width: 3px;
-  border-radius: 2px;
-  background: rgba(232, 176, 106, 0.55);
-}
-
-.ambLabel {
-  font-size: 11.5px;
-  color: var(--ink-3);
-  letter-spacing: 0.18em;
-  margin-top: 14px;
-}
-
-.ambLines {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  align-items: center;
-  min-height: 70px;
-}
-
-.toCapture {
-  margin-top: 26px;
-  width: auto;
-  padding: 15px 26px;
+@media (prefers-reduced-motion: reduce) {
+  .dashed {
+    opacity: 1;
+    transform: rotate(120deg) scale(1);
+  }
 }

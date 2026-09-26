@@ -16,6 +16,7 @@ export const VOICE_RULES = `你在「此刻」里说话。这个产品记录一�
 - 不评价、不表扬、不安慰式地拔高。绝不出现「加油」「你可以的」「已经很棒了」这类话。
 - 不把任何事当成成就、进步或坚持来谈。
 - 不催促，不给建议清单，不追问「要不要试试……」。这里没有可以完成的事。
+- 不主动开新话题，不把话引到你自己身上，不用「应该」「建议」这类词。
 - 只回一到两句话。短。用中文。
 - 不用 emoji，不堆感叹号。
 - 允许只是听着。不必每次都给出解释或安慰。`
@@ -34,6 +35,7 @@ export function buildFreeTextPrompt(input: {
   const memory = [
     tallyLine('主题计数', digest.themes),
     tallyLine('情绪计数', digest.emotions),
+    tallyLine('记下的具体东西', digest.clues),
     digest.recent.length > 0
       ? `最近留下的几条：${digest.recent.map((caption) => `「${caption}」`).join(' ')}`
       : '最近留下的几条：（还没有）',
@@ -46,7 +48,7 @@ ${memory}
 
 他刚刚说：${input.userText}
 
-只回一到两句话。`
+只回一到两句话。如果上面没有和他这句相关的东西，就只回应他这句话本身，不要硬扯记忆。`
 }
 
 /** 去掉包裹的引号、折平空白、限长。模型很喜欢加引号和换行。 */

@@ -33,13 +33,6 @@
   line-height: 1.7;
 }
 
-.tiny {
-  font-size: 11.5px;
-  color: var(--ink-3);
-  letter-spacing: 0.04em;
-  line-height: 1.9;
-}
-
 .empty {
   padding: 56px 16px;
   text-align: center;
@@ -49,21 +42,13 @@
   line-height: 2;
 }
 
-.footNote {
-  padding: 22px 0 4px;
-  font-size: 13.5px;
-  line-height: 1.8;
-  color: var(--ink-2);
-  font-family: var(--serif);
-}
-
-.footNote b {
-  font-weight: 500;
-  color: var(--ink);
-}
-
 /* ---------- 控件原子 ---------- */
+/* inline-flex + gap 是为了让「图标 + 文字」的筛选胶囊对齐（时间页的 chips）。
+ * 纯文字胶囊只有一个匿名 flex item，观感与原来的 inline-block 一致。 */
 .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 1px solid var(--line);
   background: transparent;
   color: var(--ink-2);
@@ -82,53 +67,12 @@
 
 .chipOn {
   background: var(--warm-soft);
-  border-color: rgba(232, 176, 106, 0.3);
+  border-color: var(--warm-line);
   color: var(--warm-bright);
 }
 
 .chip:active {
   transform: scale(0.95);
-}
-
-.keepBtn {
-  width: 100%;
-  cursor: pointer;
-  border: 1px solid var(--line);
-  background: var(--glass);
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  padding: 17px;
-  border-radius: var(--radius-md);
-  transition: 0.3s var(--ease);
-}
-
-.keepBtn:hover {
-  background: var(--glass-active);
-}
-
-.keepBtn:active {
-  transform: scale(0.98);
-}
-
-.keepBtnWarm {
-  background: linear-gradient(140deg, rgba(232, 176, 106, 0.92), rgba(224, 165, 92, 0.86));
-  color: #1a1207;
-  border-color: transparent;
-  font-weight: 600;
-}
-
-.keepBtnGhost {
-  background: transparent;
-  border-color: transparent;
-  color: var(--ink-3);
-  font-size: 12.5px;
-}
-
-.keepBtnGhost:hover {
-  background: transparent;
-  color: var(--ink-2);
 }
 
 .reply {
@@ -161,48 +105,10 @@
   font-size: 12.5px;
 }
 
-.btnStart {
-  width: 100%;
-  cursor: pointer;
-  border: 0;
-  font-family: var(--sans);
-  font-size: 14px;
-  letter-spacing: 0.16em;
-  font-weight: 600;
-  padding: 18px;
-  border-radius: var(--radius-md);
-  color: #1a1207;
-  background: linear-gradient(140deg, #f4cf94, #e0a55c);
-  box-shadow: 0 14px 40px -14px rgba(232, 176, 106, 0.75);
-  animation: arrive 0.8s var(--ease) both;
-  transition: transform 0.3s var(--ease);
-}
-
-.btnStart:active {
-  transform: scale(0.97);
-}
-
-/* 通用小胶囊：录音检测到的声音、什么都不做时浮现的环境音 */
-.dItem {
-  font-size: 12.5px;
-  color: var(--ink-2);
-  letter-spacing: 0.06em;
-  padding: 7px 15px;
-  border-radius: var(--radius-pill);
-  background: var(--glass);
-  border: 1px solid var(--line);
-  animation: dropIn 0.6s var(--ease);
-}
-
-.hintLine {
-  font-size: 12px;
-  color: var(--ink-3);
-  letter-spacing: 0.14em;
-  text-align: center;
-  line-height: 1.8;
-}
-
-/* 波形条：列表里的小波形与录音时的大波形共用一套几何 */
+/* 波形条：列表里的小波形与录音时的大波形共用一套几何。
+ * 它画的是「那一段声音有起伏」，不是「你表现得多好」——所以它**不上色**。
+ * 原来是暖金，等于给一条记录配了一块强调色；强调色只留给「你按下的那一下」。
+ * ink-3 再压 0.7，落在 demo 里那条 40% 月白的量级上。 */
 .wave {
   display: flex;
   align-items: center;
@@ -214,7 +120,8 @@
   display: block;
   width: 2.5px;
   border-radius: 2px;
-  background: rgba(232, 176, 106, 0.5);
+  background: var(--ink-3);
+  opacity: 0.7;
 }
 
 /* ---------- 动效原子 ----------
@@ -225,21 +132,6 @@
  * 所以约定：凡是要引用全局 keyframes 的动画，一律写成全局类挂上去；
  * 模块的 .module.css 里不写 animation（组件内部自己 @keyframes 的除外）。
  * 这条是构建产物里看出来的，不是猜的。 */
-.fadeUp {
-  animation: traceIn 0.7s var(--ease);
-}
-
-.softBreathing {
-  animation: softBreathe 9s ease-in-out infinite;
-}
-
-.ambBar {
-  animation: amb 1.4s ease-in-out infinite alternate;
-}
-
-.breathing {
-  animation: breathe 5.5s ease-in-out infinite;
-}
 
 /* 对话里每条新消息落下来。参考稿的 .msg 用的就是 dropIn。 */
 .msgIn {

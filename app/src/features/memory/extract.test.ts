@@ -3,15 +3,17 @@ import { describe, expect, it } from 'vitest'
 import { extractTags, LEXICON } from './extract'
 
 describe('extractTags', () => {
-  it('「不想工作」→ 主题 工作 + 情绪 逃避', () => {
+  it('「不想工作」→ 主题 工作', () => {
     const tags = extractTags({ kind: 'word', text: '今天突然不想工作。' })
     expect(tags.themes).toContain('工作')
-    expect(tags.emotions).toContain('逃避')
   })
 
-  it('项目类词进 theme 项目', () => {
-    const tags = extractTags({ kind: 'word', text: '方案还是没动，文档也没写。' })
-    expect(tags.themes).toContain('项目')
+  it('「一个人」类词进 theme 独处', () => {
+    expect(extractTags({ kind: 'word', text: '又是一个人。' }).themes).toContain('独处')
+  })
+
+  it('「站了一会儿」这类停顿进 emotion 停顿', () => {
+    expect(extractTags({ kind: 'word', text: '在门口站了一会儿才进去。' }).emotions).toContain('停顿')
   })
 
   it('sceneHint 落到 scene', () => {
@@ -29,12 +31,13 @@ describe('extractTags', () => {
       emotions: [],
       people: [],
       places: [],
+      clues: [],
     })
   })
 
   it('同一个标签不重复', () => {
-    const tags = extractTags({ kind: 'word', text: '项目方案文档，全是项目。' })
-    expect(tags.themes.filter((theme) => theme === '项目')).toHaveLength(1)
+    const tags = extractTags({ kind: 'word', text: '一个人，还是一个人，我一个人。' })
+    expect(tags.themes.filter((theme) => theme === '独处')).toHaveLength(1)
   })
 
   it('词典里不含任何评价性 / 成就性词', () => {

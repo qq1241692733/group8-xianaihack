@@ -1,142 +1,63 @@
-import { useState } from 'react'
-
 import { Overlay } from '@/app/Overlay'
-import { useStore } from '@/app/store'
-import { captionOf } from '@/features/memory/display'
-import type { Entry, EntryDraft } from '@/features/memory/types'
-import { formatDuration, formatTimeOfDay } from '@/lib/time'
+import { useStore, type CaptureIntent } from '@/app/store'
+import type { EntryDraft } from '@/features/memory/types'
 
-import styles from './capture.module.css'
 import { PhotoCapture } from './PhotoCapture'
 import { SoundCapture } from './SoundCapture'
 import { WordCapture } from './WordCapture'
 
-type View = 'home' | 'sound' | 'photo' | 'word' | 'saved'
-
-function savedDetail(entry: Entry): string {
-  const time = formatTimeOfDay(entry.createdAt)
-  if (entry.kind === 'sound') {
-    const length = entry.durationMs ? formatDuration(entry.durationMs) : '环境声音'
-    return `🎧 ${time} · ${length}`
-  }
-  if (entry.kind === 'photo') return `📷 ${time} · ${captionOf(entry)}`
-  return `✍️ ${time} · ${captionOf(entry)}`
+/** 一个方向一屏。没有「先选一个」的中转页 —— 方向已经由首页那一下选过了。 */
+const TITLE: Record<CaptureIntent, string> = {
+  sound: '听见',
+  photo: '看见',
+  word: '写下',
 }
 
 /**
- * 「留下此刻」。
+ * 三个「留下」的浮层。
  *
- * 声音 / 照片 / 一句话 三个入口都是真的（真麦克风、真相机），
- * 而「什么都不留下」与它们**同等显眼**——那也是一个完整的答案。
+ * 声音 / 照片 / 一句话 三条路都是真的（真麦克风、真相机），只换壳。
+ *
+ * 采完**不落库，只攒起来**：这条东西落到首页那颗球的旁边，等长按「记下此刻」时
+ * 才和别的元素一起落成一个「此刻」。所以这里只 stageDraft，落库在首页。
+ * 浮层采完直接收起来：**没有「留下来了」的汇总页、没有 toast、没有对勾**。
  */
 export function CaptureOverlay() {
+  const open = useStore((s) => s.overlay === 'capture')
+  const intent = useStore((s) => s.captureIntent)
+  const target = useStore((s) => s.captureTarget)
+  const stageDraft = useStore((s) => s.stageDraft)
+  const composerAttach = useStore((s) => s.composerAttach)
+  const openOverlay = useStore((s) => s.openOverlay)
   const closeOverlay = useStore((s) => s.closeOverlay)
-  const showToast = useStore((s) => s.showToast)
-  const goPane = useStore((s) => s.goPane)
-  const capture = useStore((s) => s.capture)
 
-  const [view, setView] = useState<View>('home')
-  const [saved, setSaved] = useState<Entry | null>(null)
-
-  function reset() {
-    setView('home')
-    setSaved(null)
-  }
-
-  function dismiss() {
+  function handleDone(draft: EntryDraft) {
+    // 从「记录此刻」编辑器点进来的：采到的算附件，采完回到编辑器接着写。
+    if (target === 'compose') {
+      composerAttach(draft)
+      openOverlay('compose')
+      return
+    }
+    stageDraft(draft)
     closeOverlay()
-    reset()
-  }
-
-  async function handleDone(draft: EntryDraft) {
-    const entry = await capture(draft)
-    setSaved(entry)
-    setView('saved')
   }
 
   return (
-    <Overlay id="capture" closeLabel="先不留下" onClose={dismiss}>
-      {view === 'home' && (
-        <>
-          <div className="eyebrow">留下此刻</div>
-          <h2 className={styles.capTitle}>刚才发生了什么？</h2>
-          <p className={styles.capIntro}>
-            可以回答。也可以什么都不说。
-            <br />
-            你留下的方式，本身就是答案。
-          </p>
-
-          <div className={styles.capGrid}>
-            <button type="button" className={styles.capItem} onClick={() => setView('sound')}>
-              <span className={styles.ico}>🎙</span>
-              <span className={styles.txt}>
-                <b>声音</b>
-                <span>这一刻真实存在过的证据</span>
-              </span>
-              <span className={styles.arw}>›</span>
-            </button>
-            <button type="button" className={styles.capItem} onClick={() => setView('photo')}>
-              <span className={styles.ico}>📷</span>
-              <span className={styles.txt}>
-                <b>照片</b>
-                <span>我看到了什么</span>
-              </span>
-              <span className={styles.arw}>›</span>
-            </button>
-            <button type="button" className={styles.capItem} onClick={() => setView('word')}>
-              <span className={styles.ico}>✍️</span>
-              <span className={styles.txt}>
-                <b>一句话</b>
-                <span>我想表达什么</span>
-              </span>
-              <span className={styles.arw}>›</span>
-            </button>
-          </div>
-
-          <button
-            type="button"
-            className={`keepBtn ${styles.nothingKeep}`}
-            onClick={() => {
-              dismiss()
-              showToast('那就让它过去。')
-            }}
-          >
-            什么都不留下
-          </button>
-          <p className={`tiny ${styles.tinyCenter}`}>不留下，也是完整的。</p>
-        </>
-      )}
-
-      {view === 'sound' && <SoundCapture onDone={handleDone} />}
-      {view === 'photo' && <PhotoCapture onDone={handleDone} />}
-      {view === 'word' && <WordCapture onDone={handleDone} />}
-
-      {view === 'saved' && saved && (
-        <div className={styles.saved}>
-          <h2 className={styles.savedTitle}>留下来了。</h2>
-          <p className={styles.savedDetail}>{savedDetail(saved)}</p>
-          <p className={`tiny ${styles.tinyCenter}`}>
-            它不构成任何统计。
-            <br />
-            只是在时间里多了一条。
-          </p>
-          <div className={styles.savedActions}>
-            <button
-              type="button"
-              className="keepBtn"
-              onClick={() => {
-                dismiss()
-                goPane('time')
-              }}
-            >
-              去「时间」看看
-            </button>
-            <button type="button" className="keepBtn keepBtnGhost" onClick={dismiss}>
-              回到此刻
-            </button>
-          </div>
-        </div>
-      )}
+    <Overlay id="capture" closeLabel="取消" title={TITLE[intent]}>
+      {/* key 随意图重挂：换一个方向就是一次干净的开始 */}
+      <Body key={`${open}:${intent}`} intent={intent} onDone={handleDone} />
     </Overlay>
   )
+}
+
+function Body({
+  intent,
+  onDone,
+}: {
+  intent: CaptureIntent
+  onDone: (draft: EntryDraft) => void
+}) {
+  if (intent === 'photo') return <PhotoCapture onDone={onDone} />
+  if (intent === 'sound') return <SoundCapture onDone={onDone} />
+  return <WordCapture onDone={onDone} />
 }

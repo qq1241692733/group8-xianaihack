@@ -76,23 +76,35 @@ export function entryNearestDate(
 export type Digest = {
   themes: Array<{ tag: string; n: number }>
   emotions: Array<{ tag: string; n: number }>
+  /**
+   * 出现过的**自由线索**，按次数降序、限量。
+   *
+   * 它是模型把「用户嘴里的词」和「记录里的具体东西」联起来的桥：
+   * 用户说「杯子」，而记录里标的是「马克杯」——语义那一步只有模型做得了，
+   * 前提是它得看得见这些线索。所以摘要里必须有它们。
+   */
+  clues: Array<{ tag: string; n: number }>
   /** 最近几条的主文案，按时间倒序。给提示词当「你记得什么」用。 */
   recent: string[]
 }
+
+/** 摘要里最多带几条线索。线索是开集，不设限会把提示词撑爆。 */
+const MAX_DIGEST_CLUES = 12
 
 /**
  * 喂给 LLM 提示词的最小记忆摘要。
  * 只给计数与最近几条 caption——不把整库倒给模型。
  */
 export function memoryDigest(entries: readonly Entry[], recentCount = 5): Digest {
-  const tally = (dim: TagDim) => {
+  const tallyOf = (values: (entry: Entry) => readonly string[], cap = Number.POSITIVE_INFINITY) => {
     const counts = new Map<string, number>()
     for (const entry of entries) {
-      for (const tag of entry.tags[dim]) counts.set(tag, (counts.get(tag) ?? 0) + 1)
+      for (const tag of values(entry)) counts.set(tag, (counts.get(tag) ?? 0) + 1)
     }
     return [...counts.entries()]
       .map(([tag, n]) => ({ tag, n }))
       .sort((a, b) => b.n - a.n || a.tag.localeCompare(b.tag))
+      .slice(0, cap)
   }
 
   const recent = [...entries]
@@ -100,5 +112,10 @@ export function memoryDigest(entries: readonly Entry[], recentCount = 5): Digest
     .slice(0, recentCount)
     .map(captionOf)
 
-  return { themes: tally('themes'), emotions: tally('emotions'), recent }
+  return {
+    themes: tallyOf((entry) => entry.tags.themes),
+    emotions: tallyOf((entry) => entry.tags.emotions),
+    clues: tallyOf((entry) => entry.tags.clues, MAX_DIGEST_CLUES),
+    recent,
+  }
 }

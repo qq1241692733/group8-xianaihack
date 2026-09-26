@@ -22,6 +22,11 @@ export function formatDayline(d: Date): string {
   return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日 · 星期${WEEK[d.getDay()]}`
 }
 
+/** 9 月 27 日  星期日 —— 首页左上那行身份日期。不含年份：这一年不需要被提醒。 */
+export function formatStamp(d: Date): string {
+  return `${d.getMonth() + 1} 月 ${d.getDate()} 日  星期${WEEK[d.getDay()]}`
+}
+
 /** 时间戳 → 19:42 */
 export function formatTimeOfDay(ts: number): string {
   return formatClock(new Date(ts))

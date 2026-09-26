@@ -3,29 +3,161 @@
  * 这里是颜色的唯一来源；组件里不允许出现字面色值。
  */
 :root {
-  --bg: #08080a;
-  --ink: #f2efe9;
-  --ink-2: rgba(242, 239, 233, 0.66);
-  --ink-3: rgba(242, 239, 233, 0.38);
-  --ink-4: rgba(242, 239, 233, 0.18);
-  --line: rgba(242, 239, 233, 0.09);
-  --line-dashed: rgba(242, 239, 233, 0.14);
-  --screen-bg: #0b0b0d;
-  --overlay-bg: #07070a;
-  --warm: #e8b06a;
-  --warm-bright: #f6d7a8;
-  --warm-soft: rgba(232, 176, 106, 0.16);
-  --warm-line: rgba(232, 176, 106, 0.28);
-  --warm-line-strong: rgba(232, 176, 106, 0.34);
-  --glass: rgba(255, 255, 255, 0.045);
-  --glass-hover: rgba(255, 255, 255, 0.075);
-  --glass-active: rgba(255, 255, 255, 0.08);
-  --cool: rgba(143, 168, 200, 0.08);
+  /* ---------- 底色：墨蓝的夜，不是黑。夜里有层次，黑只有死 ---------- */
+  --bg: #06080d;
+  --screen-bg: #090d13;
+  --overlay-bg: #05070b;
+  --raised: #0d121a;
+
+  /* ---------- 文本：冷白，整体比上一版提亮一档（0.38 的小字在真机上看不见）----------
+   * 注意是冷白不是暖白：原来的 #f2efe9 与暖金会糊在一起。 */
+  --ink: #eef1f6;
+  --ink-2: rgba(238, 241, 246, 0.72);
+  /* ink-3 从 0.46 提到 0.58：0.46 在 #090d13 上只有约 4.1:1，低于正文 4.5:1。
+   * 而它承担的全是 10–12px 的时间戳、副标题、元信息——小字最需要对比度，不能最暗。
+   * ink-4（0.24 ≈ 1.8:1）不再是文字色，只留给圆点与分隔线。 */
+  --ink-3: rgba(238, 241, 246, 0.58);
+  --ink-4: rgba(238, 241, 246, 0.24);
+  --line: rgba(238, 241, 246, 0.095);
+
+  /* ---------- 首页对齐基准稿（index_demo_light_v2.html）新增的一批 ----------
+   * 值取自 index.html 的 TOKENS / :root / [data-theme="night"]，逐值对齐。
+   * 这里放的是**夜**值（:root = 夜），昼值在下面的覆盖块里。
+   * 注意 --black **会翻转**：昼是黑胶囊，夜里同一颗胶囊必须是亮的。 */
+  --fill: rgba(238, 241, 246, 0.065); /* 灰面（navigational 支路 / 淡底） */
+  --fill-2: rgba(238, 241, 246, 0.1); /* 比 fill 再深半档 */
+  --line-2: rgba(238, 241, 246, 0.15); /* 比 line 重一档的边（取景框 / 快门外环） */
+  --black: #e8eef7; /* 主操作底：夜 = 月白 */
+  --on-btn: #0a0d13; /* 主操作上的字 */
+
+  /* 首页那颗「长按 · 记录此刻」的底与字。它是全 App 唯一一处**带色相的主操作**——
+     底色取自球（--c1/--c2 那一族），所以它读起来像球的一部分，而不是又一个按钮。 */
+  --cta: rgba(108, 140, 240, 0.16);
+  --on-cta: #b9cbf8;
+  --surface: rgba(238, 241, 246, 0.065); /* 浮面：图标钮 / Tab 栏 */
+  --surface-line: transparent;
+  --surface-shadow: none;
+
+  /* 四个方向的色相。只在四向刻度上出现 —— 它们是「动作的坐标」，
+   * 不是随便的装饰色；一屏仍只有一个强调色（金）。 */
+  --d-voice: #9c8cf6; /* 听见 */
+  --d-photo: #6c8cf0; /* 看见 */
+  --d-write: #5fcbb0; /* 写下 */
+  --d-blank: #8a8a92; /* 什么也不留 */
+
+  --tabbar-bg: rgba(22, 27, 36, 0.82);
+  --tabbar-line: rgba(238, 241, 246, 0.1);
+  --tabbar-shadow: 0 18px 44px -14px rgba(0, 0, 0, 0.72);
+  --tabbar-blur: blur(20px) saturate(1.25);
+  --tab-idle: rgba(238, 241, 246, 0.32);
+
+  --ripple-line: rgba(232, 238, 247, 0.26);
+  --holdbtn-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.8), 0 0 30px -10px rgba(232, 238, 247, 0.3);
+  --holdbtn-lock: #d3dff1;
+  --holdbtn-lock-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.7), 0 0 22px -6px rgba(232, 238, 247, 0.42);
+
+  --flash: #e8eef7;
+  --flash-peak: 0.58;
+
+  --vf-bg: #0c1016; /* 取景框底（摄像头取不到时） */
+  --vf-line: rgba(238, 241, 246, 0.075);
+  --vf-ink: rgba(238, 241, 246, 0.34);
+  --vf-corner: rgba(238, 241, 246, 0.22);
+  --vf-focus: rgba(238, 241, 246, 0.3);
+  --placeholder: rgba(238, 241, 246, 0.26);
+  --dashed-line: rgba(238, 241, 246, 0.3);
+  --btn-off-ink: rgba(238, 241, 246, 0.28);
+
+  /* ---------- 主色：月白 ----------
+   * 场永远是这一条。空与满的差别用亮度与线宽表达，**不做色相插值**——
+   * 冷青和暖金一平均就是一团没有色相的土黄灰，那是上一版「脏」的来源。 */
+  --moon: #e8eef7;
+  --moon-soft: rgba(232, 238, 247, 0.14);
+
+  /* ---------- 强调：金 ----------
+   * 全屏只有一个强调色，且只出现在三处：罗盘命中 / 已保留 / 核心的一点温度。 */
+  --warm: #e0a95e;
+  --warm-bright: #f4d3a0;
+  --warm-soft: rgba(224, 169, 94, 0.12);
+  --warm-line: rgba(224, 169, 94, 0.3);
+  --warm-line-strong: rgba(224, 169, 94, 0.38);
+
+  /* ---------- 玻璃层 ---------- */
+  --glass: rgba(238, 241, 246, 0.045);
+  --glass-hover: rgba(238, 241, 246, 0.075);
+  --glass-active: rgba(238, 241, 246, 0.08);
+
+  /* ---------- 冷青：降级为底雾，不再是配色的一半 ---------- */
+  --cool: rgba(126, 166, 209, 0.07);
+  --cool-mist: rgba(126, 166, 209, 0.07);
+
+  /* ---------- 记录类型色：只在画布的色团层用，不参与平均 ---------- */
+  --kind-sound: #d99a4e;
+  --kind-word: #eef1f6;
+
+  /* ---------- 语义 ---------- */
+  --danger: #c9695a;
 
   --serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', Georgia, serif;
   --sans:
     -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
     Inter, system-ui, sans-serif;
+
+  /* ---------- 球与光（夜版）----------
+   * 球是「光源」：留下的越多，网眼越密、越亮。
+   * 这三个值虽然只在画布里用，但必须和 --warm 一样能被主题覆盖 ——
+   * 否则切到昼版，球还是那颗夜里的球（docs/16 一①）。 */
+  --c1: #a9c8ff; /* 球亮部：淡蓝。不是月白——深底上月白会读成一颗银灰月亮 */
+  --c2: #1c3488; /* 球暗部：深靛。必须比屏底亮，否则球是个洞 */
+  --glow-rgb: 58, 94, 214; /* 常驻辉光基色 */
+  --orb-glow: 0 0 24px -4px rgba(58, 94, 214, 0.6);
+
+  /* ---------- 实心主操作 ---------- */
+  --solid: #e8eef7; /* 夜里的主操作底 = 月白 */
+  --on-solid: #0a0d13;
+
+  /* ---------- 金色渐变（按钮用）---------- */
+  --gold-a: #f4d3a0;
+  --gold-b: #e0a95e;
+  --on-gold: #16110a;
+
+  /* ---------- 台面：手机之外的那片空 ---------- */
+  --device-a: #2b2e35;
+  --device-b: #12141a;
+  --device-c: #232730;
+  --device-edge: rgba(238, 241, 246, 0.07);
+  --device-cast: 0 40px 90px -20px rgba(0, 0, 0, 0.9);
+  --device-bloom: 0 0 120px -30px rgba(126, 166, 209, 0.22);
+  --sidekey-a: #3b3f48;
+  --sidekey-b: #1c1f26;
+  --homebar: rgba(238, 241, 246, 0.28);
+  --grain: 0.05; /* 颗粒只在夜底上当材质；纸面上它是一层脏 */
+
+  /* ---------- 浮话（Toast）----------
+   * 两版都保持深底浅字：它是浮在界面之上的一句话，不因为主题变了就换一张白卡。
+   * 所以这一对**不进昼版覆盖块**，只在这里写一次。 */
+  --toast-bg: rgba(24, 24, 27, 0.94);
+  --toast-ink: rgba(238, 241, 246, 0.78);
+
+  /* 台面上那一点暖。夜版留一丝金，昼版整个拿掉——纸白上一点暖黄就是脏。 */
+  --warm-wash: rgba(224, 169, 94, 0.045);
+
+  /* 开场 / 浮层顶上那团暖光。夜版是一团发光的雾（好看），
+   * 纸面上同一组数字会糊成一层发黄的脏 —— 所以昼版压到不足一半。 */
+  --wash: rgba(224, 169, 94, 0.13);
+  --wash-soft: rgba(224, 169, 94, 0.07);
+
+  /* 罗盘标签底下那圈光晕。深底上要一圈黑把字托出来；
+   * 纸面上反过来要一圈纸白，否则黑晕在浅底上读成一团脏。 */
+  --label-halo: 0 0 14px rgba(0, 0, 0, 0.66);
+
+  color-scheme: dark;
+
+  /* ---------- 铭牌上的阴影：深底无效，纸面上必须有 ----------
+   * 夜版靠「更亮的底 + 细边」分层；昼版 #FDFDFC 与 #FFFFFF 只差 2 级，
+   * 「更亮的底」也无效 —— 只能补一层极浅落影（docs/18 §二②）。 */
+  --lift: none;
+  --lift-strong: none;
 
   --ease: cubic-bezier(0.22, 0.61, 0.24, 1);
 
@@ -34,6 +166,135 @@
   --radius-md: 18px;
   --radius-lg: 22px;
   --radius-xl: 24px;
+}
+
+/* ============================================================
+ * 昼版覆盖层。
+ *
+ * 只覆盖「不一样的」，**不删夜值** —— 万一有组件还没改到，它至少还是夜版的样子，
+ * 不会掉成一块半透明黑底白字。
+ *
+ * 三处方向相反，照抄夜版一定坏（docs/18 §二）：
+ *   ① --warm-bright：昼版**更深**（#8A5F1C），夜版更亮（#F4D3A0）。
+ *      这是最容易静默出错的一处 —— 照抄夜版的值，在纸白上淡到看不见。
+ *   ② --glass：夜版是「比屏底更亮的一层」，昼版是「比纸白更白的一张卡」。
+ *   ③ 球：夜＝光源（密度往亮走），昼＝墨点（往暗走）。在 paint.ts / dotOrb.ts 里落地。
+ *
+ * 第 3 条不在 CSS 里，但它是这一层存在的理由：切主题时最先变的一定是那颗球。
+ * ============================================================ */
+html[data-theme='day'] {
+  /* 纸白，不是死白 */
+  --bg: #f5f5f3;
+  --screen-bg: #fdfdfc;
+  --overlay-bg: #f7f7f5;
+  --raised: #ffffff;
+
+  --ink: #101011;
+  --ink-2: #5b5b5f;
+  /* 没有照抄 demo 的 #9A9A9F：它在纸白上只有约 2.8:1，而 ink-3 承担的全是
+   * 10–12px 的时间戳与副标题——小字最需要对比度。夜版为同一件事把 0.46 提到 0.58，
+   * 这里照同一条规矩下压到 #6F6F76（约 5.0:1）。 */
+  --ink-3: #6f6f76;
+  --ink-4: #c4c4c9;
+  --line: #ebebed;
+
+  /* 首页对齐基准稿的那一批，昼值。 --black 在这里是**黑**（纸面上的黑胶囊），
+   * 夜版那一份是月白 —— 这一对翻转是本次最容易静默出错的地方。 */
+  --fill: #f1f1f3;
+  --fill-2: #eaeaec;
+  --line-2: #e2e2e6;
+  --black: #111112;
+  --on-btn: #ffffff;
+
+  /* 首页那颗「长按 · 记录此刻」的底与字（见夜版同名的说明）。 */
+  --cta: #e9edfc;
+  --on-cta: #4353cc;
+  --surface: #ffffff;
+  --surface-line: #efeff1;
+  --surface-shadow: 0 3px 10px rgba(16, 16, 18, 0.07);
+
+  --d-voice: #7566e8;
+  --d-photo: #3a5ed6;
+  --d-write: #3faf91;
+  --d-blank: #b4b4ba;
+
+  --tabbar-bg: #ffffff;
+  --tabbar-line: #f1f1f3;
+  --tabbar-shadow: 0 10px 30px -6px rgba(16, 16, 18, 0.16), 0 2px 6px rgba(16, 16, 18, 0.06);
+  --tabbar-blur: none;
+  --tab-idle: #b6b6bc;
+
+  --ripple-line: rgba(16, 16, 18, 0.2);
+  --holdbtn-shadow: 0 10px 24px -8px rgba(16, 16, 18, 0.34);
+  --holdbtn-lock: #1b1b1d;
+  --holdbtn-lock-shadow: 0 6px 18px -10px rgba(16, 16, 18, 0.5);
+
+  --flash: #ffffff;
+  --flash-peak: 0.92;
+
+  --vf-bg: #fafaf9;
+  --vf-line: #ededef;
+  --vf-ink: rgba(16, 16, 18, 0.34);
+  --vf-corner: rgba(16, 16, 18, 0.2);
+  --vf-focus: rgba(16, 16, 18, 0.26);
+  --placeholder: #cfcfd4;
+  --dashed-line: #c8c8ce;
+  --btn-off-ink: #b4b4ba;
+
+  --moon: #111112;
+  --moon-soft: rgba(17, 17, 18, 0.08);
+
+  --warm: #b8842f;
+  --warm-bright: #8a5f1c;
+  --warm-soft: rgba(184, 132, 47, 0.1);
+  --warm-line: rgba(184, 132, 47, 0.3);
+  --warm-line-strong: rgba(184, 132, 47, 0.38);
+
+  --glass: #ffffff;
+  --glass-hover: #fafaf9;
+  --glass-active: #f1f1f3;
+
+  --cool: rgba(126, 166, 209, 0.05);
+  --cool-mist: rgba(126, 166, 209, 0.05);
+
+  --kind-sound: #b8842f;
+  --kind-word: #101011;
+  --danger: #b4483a;
+
+  /* 墨点：亮部仍是淡蓝（保留「这是蓝的那颗球」），暗部走纯靛 —— 在纸面上往暗走 */
+  --c1: #b7cffa;
+  --c2: #3a5ed6;
+  --glow-rgb: 58, 94, 214;
+  /* 纸面上球不发光，它落影。30px 的黑晕在纸上是脏，所以只给一点点 */
+  --orb-glow: 0 2px 10px rgba(24, 28, 40, 0.16);
+
+  --solid: #111112;
+  --on-solid: #fbfbfa;
+
+  --gold-a: #d9ab5e;
+  --gold-b: #b8842f;
+  --on-gold: #1a1206;
+
+  /* 浅陶瓷机身。深色机身摆在纸面上，会比屏幕本身还抢眼 */
+  --device-a: #fbfbf9;
+  --device-b: #e9e9e6;
+  --device-c: #f4f4f1;
+  --device-edge: rgba(24, 28, 40, 0.08);
+  --device-cast: 0 40px 90px -24px rgba(24, 28, 40, 0.28);
+  --device-bloom: 0 0 120px -40px rgba(126, 166, 209, 0.35);
+  --sidekey-a: #e6e6e2;
+  --sidekey-b: #cfcfca;
+  --homebar: rgba(16, 16, 17, 0.18);
+  --grain: 0.03;
+
+  --lift: 0 1px 2px rgba(24, 28, 40, 0.04), 0 8px 24px -12px rgba(24, 28, 40, 0.14);
+  --lift-strong: 0 2px 6px rgba(24, 28, 40, 0.05), 0 18px 40px -18px rgba(24, 28, 40, 0.22);
+
+  --warm-wash: transparent;
+  --wash: rgba(184, 132, 47, 0.055);
+  --wash-soft: rgba(184, 132, 47, 0.03);
+  --label-halo: 0 0 14px rgba(253, 253, 252, 0.9);
+  color-scheme: light;
 }
 
 /* ---------- 全局动画 ---------- */
@@ -58,17 +319,6 @@
   }
 }
 
-@keyframes traceIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @keyframes dropIn {
   from {
     opacity: 0;
@@ -77,82 +327,6 @@
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-@keyframes pulseBar {
-  from {
-    transform: scaleY(0.45);
-  }
-  to {
-    transform: scaleY(1.15);
-  }
-}
-
-@keyframes breathe {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.85;
-  }
-  50% {
-    transform: scale(1.09);
-    opacity: 1;
-  }
-}
-
-@keyframes softBreathe {
-  0%,
-  100% {
-    transform: scale(0.86);
-    opacity: 0.62;
-  }
-  50% {
-    transform: scale(1.08);
-    opacity: 1;
-  }
-}
-
-@keyframes amb {
-  from {
-    transform: scaleY(0.3);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-
-@keyframes bloom {
-  from {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.06);
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes arrive {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes drift {
-  from {
-    transform: scale(1.03) translate(0, 0);
-  }
-  to {
-    transform: scale(1.1) translate(-2%, -2%);
   }
 }
 

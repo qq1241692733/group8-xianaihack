@@ -1,311 +1,425 @@
-/* ---------- 选择怎么留下 ---------- */
-.capTitle {
+/*
+ * 三个「留下」的浮层：看见（拍照）/ 写下（一句话）/ 听见（录音）。
+ *
+ * 词汇与取值逐条来自基准稿 index_demo_light_v2.html 的 .sheet 那一段。
+ * 颜色一律走 tokens.css；这里不出现字面色值。
+ *
+ * 外壳（底色、淡入、动作头）在 app/Overlay.module.css；这里只管浮层**内容**。
+ */
+
+/* ---------- 说明：一个问句 + 一行小字 ---------- */
+.scap {
+  flex: 0 0 auto;
+  padding: 22px 30px 0;
+  text-align: center;
+}
+
+.scap h3 {
+  margin: 0;
   font-family: var(--serif);
-  font-size: 27px;
-  font-weight: 500;
-  margin: 6px 0 0;
-  line-height: 1.5;
-}
-
-.capIntro {
-  font-size: 13px;
-  color: var(--ink-3);
-  line-height: 1.85;
-  margin: 12px 0 0;
-}
-
-.capGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-  margin-top: 30px;
-}
-
-.capItem {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  cursor: pointer;
-  border: 1px solid var(--line);
-  text-align: left;
-  padding: 19px 20px;
-  border-radius: 20px;
-  font-family: var(--sans);
-  background: var(--glass);
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
   color: var(--ink);
-  transition: 0.35s var(--ease);
 }
 
-.capItem:hover {
-  background: var(--glass-hover);
-  transform: translateX(3px);
-  border-color: var(--ink-4);
+.scap p {
+  margin: 8px 0 0;
+  font-size: 10.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
 }
 
-.capItem:active {
+/* ---------- 通用底部按钮 ---------- */
+.footbtn {
+  flex: 0 0 auto;
+  padding: 0 26px 42px;
+}
+
+.bigbtn {
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--black);
+  color: var(--on-btn);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: var(--holdbtn-shadow);
+  transition:
+    transform 0.2s var(--ease),
+    background 0.3s var(--ease),
+    color 0.3s var(--ease),
+    opacity 0.3s var(--ease);
+}
+
+.bigbtn:active {
   transform: scale(0.98);
 }
 
-.ico {
-  font-size: 20px;
-  width: 26px;
-  text-align: center;
+/* 还没写东西时：不假装可以按 */
+.bigbtnOff {
+  background: var(--fill);
+  color: var(--btn-off-ink);
+  box-shadow: none;
+  cursor: default;
 }
 
-.txt {
-  flex: 1;
-}
-
-.txt b {
-  display: block;
-  font-family: var(--serif);
-  font-size: 16.5px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-}
-
-.txt span {
-  display: block;
-  font-size: 11.5px;
-  color: var(--ink-3);
-  margin-top: 5px;
-}
-
-.arw {
-  color: var(--ink-3);
-  font-size: 14px;
-}
-
-.nothingKeep {
-  margin-top: 14px;
-}
-
-.tinyCenter {
-  text-align: center;
-  margin-top: 12px;
-}
-
-/* ---------- 声音 ---------- */
-.rec {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.bigWave {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  height: 96px;
-  margin: 34px 0 6px;
-}
-
-.bigWave i {
-  display: block;
-  width: 3px;
-  border-radius: 3px;
-  background: linear-gradient(to top, rgba(232, 176, 106, 0.35), var(--warm));
-}
-
-.timer {
-  font-family: var(--serif);
-  font-size: 40px;
-  font-variant-numeric: tabular-nums;
-}
-
-.hint {
-  font-size: 12px;
-  color: var(--ink-3);
-  letter-spacing: 0.14em;
-  text-align: center;
-  line-height: 1.8;
-}
-
-.detected {
-  margin-top: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  align-items: center;
-  min-height: 76px;
-}
-
-.recActions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  margin-top: 26px;
-}
-
-.stopBtn {
-  width: 104px;
-  height: 104px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 1px solid rgba(232, 176, 106, 0.4);
-  background: radial-gradient(circle at 40% 35%, rgba(232, 176, 106, 0.28), rgba(232, 176, 106, 0.06));
-  color: var(--warm-bright);
-  font-family: var(--serif);
-  font-size: 15px;
-  letter-spacing: 0.16em;
-  display: grid;
-  place-items: center;
-  transition: transform 0.3s var(--ease);
-}
-
-.stopBtn:active {
-  transform: scale(0.93);
-}
-
-/* ---------- 照片 ---------- */
-.camView {
+/* ============================================================
+ * 看见 · 拍照
+ * ============================================================ */
+.viewfinder {
   position: relative;
-  flex: 1;
-  min-height: 280px;
+  margin: 24px 28px 0;
+  flex: 1 1 auto;
+  min-height: 0;
   border-radius: var(--radius-xl);
   overflow: hidden;
-  margin-top: 26px;
-  border: 1px solid var(--line);
+  background: var(--vf-bg);
+  box-shadow: inset 0 0 0 1px var(--vf-line);
 }
 
+/* 真实摄像头预览。拿不到相机时它保持透明，下面那层 SceneCanvas 露出来。 */
 .camMedia {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 1;
 }
 
-.sceneCanvas {
+.vfCanvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  display: block;
 }
 
-.frame {
+.vfCorner {
   position: absolute;
-  inset: 16px;
-  border: 1px solid rgba(242, 239, 233, 0.22);
-  border-radius: 14px;
-  pointer-events: none;
+  width: 17px;
+  height: 17px;
+  border: 1.4px solid var(--vf-corner);
+  opacity: 0.9;
+  z-index: 2;
 }
 
-.camCap {
+/* 四角括号：每个只留朝内的两条边。
+ * 注意这些变体必须是**模块类**（不能写成 `.vfCorner.tl` + 字面量 `tl`）——
+ * CSS Modules 会把选择器里的每个类名都哈希掉，字面量 `tl` 永远匹配不上。 */
+.vfTl {
+  left: 14px;
+  top: 14px;
+  border-right: 0;
+  border-bottom: 0;
+  border-radius: 5px 0 0 0;
+}
+
+.vfTr {
+  right: 14px;
+  top: 14px;
+  border-left: 0;
+  border-bottom: 0;
+  border-radius: 0 5px 0 0;
+}
+
+.vfBl {
+  left: 14px;
+  bottom: 14px;
+  border-right: 0;
+  border-top: 0;
+  border-radius: 0 0 0 5px;
+}
+
+.vfBr {
+  right: 14px;
+  bottom: 14px;
+  border-left: 0;
+  border-top: 0;
+  border-radius: 0 0 5px 0;
+}
+
+.vfMeta {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
-  padding: 16px 18px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
-  font-family: var(--serif);
-  font-size: 14px;
-  color: rgba(242, 239, 233, 0.9);
+  bottom: 16px;
+  text-align: center;
+  font-size: 9.5px;
+  color: var(--vf-ink);
+  letter-spacing: 0.24em;
+  z-index: 2;
 }
 
-.shutterBtn {
-  width: 104px;
-  height: 104px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid rgba(242, 239, 233, 0.5);
-  background: rgba(242, 239, 233, 0.1);
-  display: grid;
-  place-items: center;
-  transition: transform 0.3s var(--ease);
+.vfFocus {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 62px;
+  height: 62px;
+  margin: -31px 0 0 -31px;
+  border: 1.2px solid var(--vf-focus);
+  border-radius: 6px;
+  opacity: 0;
+  z-index: 2;
 }
 
-.shutterBtn i {
-  width: 74px;
-  height: 74px;
-  border-radius: 50%;
-  background: rgba(242, 239, 233, 0.85);
-  display: block;
+/* 开屏后一次对焦：放大→落下→停一会儿→消失。延时 620ms 是基准稿给的节拍。 */
+.vfFocusGo {
+  animation: vfFocus 1.1s cubic-bezier(0.2, 0.8, 0.3, 1) 0.62s forwards;
 }
 
-.shutterBtn:active {
-  transform: scale(0.93);
+@keyframes vfFocus {
+  0% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+  22% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 
-.shutterBtn:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-
-/* ---------- 一句话 ---------- */
-.write {
-  margin-top: 26px;
-  width: 100%;
-  min-height: 200px;
-  resize: none;
-  outline: 0;
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: 22px;
-  line-height: 1.85;
-  padding: 8px 2px;
-}
-
-.write::placeholder {
-  color: var(--ink-4);
-}
-
-.wcount {
-  font-size: 11.5px;
-  color: var(--ink-3);
-  margin-top: 12px;
-  text-align: right;
-}
-
-.wordTitle {
-  font-family: var(--serif);
-  font-size: 24px;
-  font-weight: 500;
-  margin: 14px 0 0;
-}
-
-.wordKeep {
-  margin-top: 22px;
-}
-
-/* ---------- 留下来了 ---------- */
-.saved {
-  flex: 1;
+.shutterwrap {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 26px 0 40px;
+  gap: 14px;
+}
+
+.shutter {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  text-align: center;
-  gap: 12px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  transition: transform 0.3s var(--ease);
 }
 
-.savedTitle {
-  font-family: var(--serif);
-  font-size: 26px;
-  font-weight: 500;
-  margin: 8px 0 0;
+.shutter:active {
+  transform: scale(0.9);
 }
 
-.savedDetail {
-  font-size: 12.5px;
-  color: var(--ink-3);
-  margin: 0;
-  line-height: 1.9;
+/* 快门的面就是那颗球（同一套网点，只是 70px） */
+.shutterOrb {
+  border-radius: 50%;
 }
 
-.savedActions {
-  margin-top: 26px;
-  width: 100%;
+.shutterRing {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+}
+
+.shutterTip {
+  font-size: 10px;
+  color: var(--ink-4);
+  letter-spacing: 0.2em;
+}
+
+/* ---------- 从相册选 ----------
+ * 与快门并列的第二条来路。样式上仍取最安静的一档：它不是主按钮，
+ * 不用金、不用主按钮形制、不带箭头。 */
+.albumRow {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 0 34px;
+}
+
+.albumPick {
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--sans);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.albumHint {
+  font-size: 9.5px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+}
+
+.albumFile {
+  display: none;
+}
+
+/* ---------- 视觉 LLM 开关 ----------
+ * 最安静的一档，且默认关。它是一条隐私边界，不是一个卖点。 */
+.visionRow {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 0 26px;
+}
+
+.visionToggle {
+  border: 0;
+  background: transparent;
+  color: var(--ink-4);
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.visionOn {
+  color: var(--ink-2);
+}
+
+.visionHint {
+  font-size: 9px;
+  color: var(--ink-4);
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
+
+/* 拖着照片悬在取景框上时，只画一圈虚线——不弹提示、不变色 */
+.vfDrop {
+  box-shadow: inset 0 0 0 1px var(--vf-corner);
+}
+
+/* 按下快门那一下的白闪 */
+.flash {
+  position: absolute;
+  inset: 0;
+  background: var(--flash);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.flashGo {
+  animation: flashUp 0.42s ease-out forwards;
+}
+
+@keyframes flashUp {
+  0% {
+    opacity: 0;
+  }
+  9% {
+    opacity: var(--flash-peak);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 拍完：取景框放大淡出，像把这一刻吸走 */
+.vfOut {
+  transition:
+    transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.42s ease;
+  transform: scale(1.035);
+  opacity: 0;
+}
+
+/* ============================================================
+ * 写下 · 一句话
+ * ============================================================ */
+.paper {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 34px 64px;
+}
+
+.writeTa {
+  width: 100%;
+  height: 230px;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1.95;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  caret-color: var(--ink);
+}
+
+.writeTa::placeholder {
+  color: var(--placeholder);
+}
+
+.wc {
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-4);
+  letter-spacing: 0.14em;
+  height: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 交出去时那句话自己淡掉、虚掉 —— 它是被写下了，不是被删掉了 */
+.taOut {
+  transition:
+    opacity 0.38s ease,
+    filter 0.38s ease,
+    transform 0.38s ease;
+  opacity: 0;
+  filter: blur(3px);
+  transform: scale(0.97);
+}
+
+/* ============================================================
+ * 听见 · 一圈声音的圆
+ * ============================================================ */
+.voicewrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-bottom: 78px;
+}
+
+.voiceCanvas {
+  width: 250px;
+  height: 250px;
+}
+
+.voiceOut {
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease;
+  transform: scale(0.86);
+  opacity: 0;
 }

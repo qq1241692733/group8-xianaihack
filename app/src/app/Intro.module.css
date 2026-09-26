@@ -10,7 +10,7 @@
   padding: 0 44px;
   gap: 18px;
   background:
-    radial-gradient(90% 60% at 50% 30%, rgba(232, 176, 106, 0.13), transparent 60%),
+    radial-gradient(90% 60% at 50% 30%, var(--wash), transparent 60%),
     var(--overlay-bg);
   transition: opacity 0.9s var(--ease);
 }

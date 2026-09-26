@@ -32,10 +32,13 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  /* 桌面上手机之外的那片空。以夜色为主，金色只留一丝——
+   * 上一版这里两团暖金，屏幕还没看就开始发光，主角被抢了。
+   * 昼版把那丝金整个拿掉（--warm-wash 变成 transparent）：纸白上一点暖黄就是脏。 */
   background:
-    radial-gradient(120% 80% at 50% -10%, rgba(232, 176, 106, 0.1), transparent 60%),
+    radial-gradient(120% 80% at 50% -10%, rgba(126, 166, 209, 0.075), transparent 60%),
     radial-gradient(90% 60% at 80% 110%, var(--cool), transparent 60%),
-    radial-gradient(70% 50% at 10% 90%, rgba(232, 176, 106, 0.05), transparent 60%);
+    radial-gradient(70% 50% at 10% 90%, var(--warm-wash), transparent 60%);
 }
 
 /* ---------- 颗粒噪点，给暗色屏幕一点材质 ---------- */
@@ -43,7 +46,8 @@ body::before {
   position: fixed;
   inset: -50%;
   pointer-events: none;
-  opacity: 0.05;
+  /* 颗粒是给暗底的一点材质。纸面上它只剩一层脏，所以昼版压到 0.03。 */
+  opacity: var(--grain);
   z-index: 99;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grainShift 6s steps(6) infinite;
@@ -63,12 +67,12 @@ body::before {
   width: 392px;
   height: 846px;
   border-radius: 56px;
-  background: linear-gradient(160deg, #2a2a2e, #111114 40%, #242428);
+  background: linear-gradient(160deg, var(--device-a), var(--device-b) 40%, var(--device-c));
   padding: 11px;
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.07),
-    0 40px 90px -20px rgba(0, 0, 0, 0.9),
-    0 0 120px -30px rgba(232, 176, 106, 0.18);
+    0 0 0 1px var(--device-edge),
+    var(--device-cast),
+    var(--device-bloom);
 }
 
 .device::after {
@@ -79,7 +83,7 @@ body::before {
   width: 3px;
   height: 96px;
   border-radius: 3px;
-  background: linear-gradient(#3a3a40, #1c1c20);
+  background: linear-gradient(var(--sidekey-a), var(--sidekey-b));
 }
 
 .screen {
@@ -89,7 +93,7 @@ body::before {
   border-radius: 46px;
   overflow: hidden;
   background:
-    radial-gradient(110% 60% at 50% 0%, rgba(232, 176, 106, 0.09), transparent 55%),
+    radial-gradient(110% 60% at 50% 0%, rgba(126, 166, 209, 0.075), transparent 55%),
     radial-gradient(80% 50% at 100% 100%, var(--cool), transparent 60%),
     var(--screen-bg);
   display: flex;
@@ -104,7 +108,7 @@ body::before {
   width: 112px;
   height: 31px;
   border-radius: 20px;
-  background: #000;
+  background: #04060a;
   z-index: 40;
 }
 
@@ -224,7 +228,7 @@ body::before {
   width: 132px;
   height: 5px;
   border-radius: 3px;
-  background: rgba(242, 239, 233, 0.28);
+  background: var(--homebar);
   z-index: 35;
 }
 

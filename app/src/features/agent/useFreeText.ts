@@ -4,6 +4,7 @@ import { useStore } from '@/app/store'
 import { createId } from '@/lib/id'
 
 import { askFreeText } from './freeText'
+import { isOrganizeAsk } from './volumeIntent'
 
 /**
  * 自由输入那一路的发送。
@@ -31,14 +32,33 @@ export function useFreeText(): { busy: boolean; send: (raw: string) => void } {
     inFlight.current = true
 
     const store = useStore.getState()
+
+    // 本地意图路由先判（docs/23 §三）：整理 / 查询已有册是确定性的，不需要 LLM。
+    // 命中时它负责整条回执（含用户那句话本身）。
+    if (store.aiVolumesFree(text)) {
+      inFlight.current = false
+      return
+    }
+
+    // 用户这句话先落进对话流。
     store.aiAppend({ id: createId('m'), kind: 'me', text })
     setBusy(true)
 
-    void askFreeText({ userText: text, entries: store.entries }).then((line) => {
-      inFlight.current = false
+    const fallback = async () => {
+      const line = await askFreeText({ userText: text, entries: useStore.getState().entries })
       if (!alive.current) return
       setBusy(false)
       useStore.getState().aiAppend({ id: createId('m'), kind: 'ai', line })
+    }
+
+    // 「整理」意图、且本地没命中已有册 → 让模型判一个候选组能不能拢出新的一册
+    // （两步成册，docs/23 §四）。命中就它负责回执，否则照旧走自由输入。
+    const run = isOrganizeAsk(text)
+      ? store.aiDossier().then((handled) => (handled ? setBusy(false) : fallback()))
+      : fallback()
+
+    void run.finally(() => {
+      inFlight.current = false
     })
   }, [])
 

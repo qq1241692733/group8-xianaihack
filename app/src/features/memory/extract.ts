@@ -1,4 +1,4 @@
-import { createEmptyTags, type EntryDraft, type EntryTags } from './types'
+import { createEmptyTags, type EntryDraft, type EntryTags, type VisualFeatures } from './types'
 
 /**
  * 写入时的一次性加工：把一句话、或其他采集时留下的线索，映射成可检索的标签。
@@ -13,17 +13,25 @@ import { createEmptyTags, type EntryDraft, type EntryTags } from './types'
 
 type Rule = readonly [keywords: readonly string[], tag: string]
 
+/**
+ * 词典按「生活证据」原则重写（见 docs/05）：不再以「工作 / 项目 / 逃避」为核心，
+ * 而是收那些能指向生活本身的词——一个人的时候、停下来的时候。
+ *
+ * 产出的标签值**必须落在 vocabulary.ts 的词表里**：规则提取与 LLM 提取共用同一套词，
+ * 本地判据与检索才比得中。加词时两处都要动。
+ */
 const THEME_RULES: readonly Rule[] = [
-  [['项目', '需求', '上线', '版本', '方案', '文档', '汇报', '进度', '产品'], '项目'],
+  [['一个人', '独自', '独处', '没人', '自己待着', '剩下我'], '独处'],
   [['工作', '加班', '开会', '上班', '任务', 'deadline', '赶工'], '工作'],
   [['休息', '睡觉', '睡', '躺', '歇', '放假', '周末', '闲着'], '休息'],
   [['朋友', '家人', '父母', '家里', '同事', '女朋友', '男朋友', '争吵'], '关系'],
   [['自己', '自我', '内耗', '比较', '不够好', '心虚'], '自我'],
   [['累', '困', '头疼', '身体', '失眠', '睡不着'], '身体'],
+  [['出游', '爬山', '登山', '远足', '露营', '出门玩', '逛', '看展', '旅行'], '出游'],
 ]
 
 const EMOTION_RULES: readonly Rule[] = [
-  [['逃避', '拖延', '拖沓', '躲', '摆烂', '抗拒', '不想做', '不想工作', '提不起', '没动'], '逃避'],
+  [['停了一下', '停下来', '站了', '站了会', '发呆', '愣', '没动', '犹豫', '迟疑'], '停顿'],
   [['疲惫', '很累', '好累', '太累', '累死', '没力气', '撑不住', '乏'], '疲惫'],
   [['焦虑', '慌', '紧张', '害怕', '担心', '不安'], '焦虑'],
   [['平静', '安静', '放松', '安稳', '静下来'], '平静'],
@@ -37,6 +45,7 @@ const PLACE_RULES: readonly Rule[] = [
   [['公司', '办公室', '工位'], '公司'],
   [['地铁', '公交', '车里'], '地铁'],
   [['外面', '街上', '路边', '公园'], '外面'],
+  [['山上', '山顶', '山脚', '缆车', '索道', '栈道'], '山上'],
 ]
 
 const PEOPLE_RULES: readonly Rule[] = [
@@ -44,6 +53,7 @@ const PEOPLE_RULES: readonly Rule[] = [
   [['朋友'], '朋友'],
   [['同事'], '同事'],
   [['女朋友', '男朋友'], '伴侣'],
+  [['孩子', '小孩', '宝宝', '儿子', '女儿'], '孩子'],
 ]
 
 function collect(haystack: string, rules: readonly Rule[]): string[] {
@@ -71,6 +81,42 @@ export function extractTags(draft: EntryDraft): EntryTags {
   tags.people = collect(haystack, PEOPLE_RULES)
   tags.scene = draft.sceneHint?.trim() || tags.places[0] || ''
 
+  return tags
+}
+
+/**
+ * 本地视觉特征 → 一句中性的画面描述。
+ *
+ * 只写**客观可测量的东西**：一天里的时段、明暗、色温。"夜里的暖光"是从像素里
+ * 量出来的；"安静的夜"不是——后者要猜心情，猜了就是撒谎（与词典不收评价词同一条纪律）。
+ * 所以这里**绝不产出 themes / emotions / people / places**，只产出 scene。
+ */
+export function sceneFromFeatures(f: VisualFeatures, hour: number): string {
+  const timeWord = hour < 9 ? '清晨的' : hour < 17 ? '白天的' : hour < 20 ? '傍晚的' : '夜里的'
+
+  const lightWord =
+    f.warmth > 0.08 ? '暖光' : f.warmth < -0.08 ? '冷光' : f.brightness < 0.28 ? '暗光' : f.brightness < 0.45 ? '微光' : '光'
+
+  return `${timeWord}${lightWord}`
+}
+
+/**
+ * 本地打标入口 = 规则层（extractTags）+ 元数据层（视觉特征）。
+ *
+ * repo 只调这一个。规则层永远先跑；照片带视觉特征时，用它量出来的 scene 覆盖
+ * 采集时那句通用线索（相机路径的 sceneHint 不是用户写的，是常量，不比重出来的准）。
+ * 永不抛错——匹配不到就是空标签，不是失败。
+ */
+export function deriveLocalTags(draft: EntryDraft): EntryTags {
+  const tags = extractTags(draft)
+  if (draft.visual) {
+    const at = draft.exif?.takenAt ?? draft.createdAt ?? Date.now()
+    tags.scene = sceneFromFeatures(draft.visual, new Date(at).getHours())
+  }
+  // 用户自己写的那行标签也是线索：与 LLM 认出来的进同一个字段、同一个检索面。
+  if (draft.clues?.length) {
+    tags.clues = [...new Set([...draft.clues.map((c) => c.trim()).filter(Boolean), ...tags.clues])]
+  }
   return tags
 }
 

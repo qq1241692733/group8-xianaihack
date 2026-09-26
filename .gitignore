@@ -1,0 +1,32 @@
+# ---- 忽略：内部文档与过程稿（不对外） ----
+docs/
+_archive/
+_process/
+
+# ---- 忽略：临时工作目录 ----
+.tmp_*/
+test_photo/
+
+# ---- 忽略：本地笔记与素材 ----
+.workbuddy/
+
+# ---- 忽略：设计稿 / 演示产物 / 打包件 ----
+design/
+release/
+
+# ---- 忽略：大体积二进制 ----
+*.pptx
+*.docx
+*.mp4
+*.apk
+
+# ---- 依赖与构建产物 ----
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# ---- 编辑器与系统 ----
+.DS_Store
+Thumbs.db
+*.log

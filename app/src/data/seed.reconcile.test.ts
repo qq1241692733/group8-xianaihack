@@ -9,7 +9,7 @@ import { seedIfEmpty } from './seed'
 /**
  * 对账回归测试。
  *
- * 剧本开场说的「过去 7 天有 4 次」「你已经提到这个项目 7 次了」不再是字面量，
+ * 剧本开场说的「过去 7 天有 4 次」「你已经提到这件事 7 次了」不再是字面量，
  * 而是从种子真实数出来的。这个文件的作用就是：谁动了种子的标签或时间，这里先红，
  * 而不是等演示现场说出一个假数字。
  */
@@ -18,18 +18,18 @@ describe('种子与剧本的数字对账', () => {
     await clearEntries()
   })
 
-  it('「提到这个项目 7 次」是真的 7', async () => {
+  it('「你已经提到这件事 7 次了」是真的 7', async () => {
     await seedIfEmpty()
-    expect(countByTheme(await listEntries(), '项目')).toBe(7)
+    expect(countByTheme(await listEntries(), '独处')).toBe(7)
   })
 
-  it('「过去 7 天有 4 次在开始工作之前停下来」是真的 4', async () => {
+  it('「过去 7 天有 4 次停下来待了一会儿」是真的 4', async () => {
     await seedIfEmpty()
     const entries = await listEntries()
     const anchor = Date.now()
 
     const hesitate = countSince(entries, anchor - HESITATE_WINDOW_MS, (entry) =>
-      entry.tags.emotions.includes('逃避'),
+      entry.tags.emotions.includes('停顿'),
     )
     expect(hesitate).toBe(4)
   })
@@ -39,14 +39,14 @@ describe('种子与剧本的数字对账', () => {
     const entries = await listEntries()
     const anchor = Date.now()
 
-    const projectAllTime = countByTheme(entries, '项目')
-    const projectInWindow = countSince(entries, anchor - HESITATE_WINDOW_MS, (entry) =>
-      entry.tags.themes.includes('项目'),
+    const aloneAllTime = countByTheme(entries, '独处')
+    const aloneInWindow = countSince(entries, anchor - HESITATE_WINDOW_MS, (entry) =>
+      entry.tags.themes.includes('独处'),
     )
 
     // 第 13 行（9 天前）在窗口外：所以「一共 7 次」与窗口内的 6 能同时成立。
-    expect(projectAllTime).toBe(7)
-    expect(projectInWindow).toBe(6)
+    expect(aloneAllTime).toBe(7)
+    expect(aloneInWindow).toBe(6)
   })
 
   it('8 月 17 日那条能被精确日期检索到', async () => {

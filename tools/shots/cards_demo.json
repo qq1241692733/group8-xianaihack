@@ -1,0 +1,9 @@
+[
+  {
+    "id": "title",
+    "url": "card_demo.html",
+    "base": "file:///D:/ai/the_time/.tmp_record",
+    "fps": 30,
+    "hold": 0.8
+  }
+]
