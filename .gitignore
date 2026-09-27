@@ -17,6 +17,13 @@ test_photo/
 design/
 release/
 
+# ---- 忽略：根目录演示稿 / 过程稿（本地保留，不入库）----
+/app.md
+/index.html
+/index_demo_light_v2.html
+/此刻_版面优化_前后对比.html
+/演示视频脚本_2分钟.html
+
 # ---- 忽略：大体积二进制 ----
 *.pptx
 *.docx
